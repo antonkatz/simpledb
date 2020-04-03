@@ -14,7 +14,7 @@ export interface OperationStream<In, Out, Context> {
     readonly chain: List<Operation<any, any, any>>
     defaultContext?: Partial<Context>
 
-    setContext(ctx: Context): this
+    setContext(ctx: Context): OperationStream<In, Out, {}>
     run(input: Observable<In>, ctx: Context): Observable<Out>
 
     add<NextOut, NextCtx>(op: Operation<Out, NextOut, NextCtx>): OperationStream<In, NextOut, NextCtx> // fixme. wrong ctx type?

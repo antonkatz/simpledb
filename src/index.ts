@@ -1,6 +1,5 @@
 import levelup from "levelup"
 import {AbstractLevelDOWNConstructor} from "abstract-leveldown"
-import {Socket} from 'socket.io'
 import {Table} from "./Table"
 import {registerTable} from "./tableRegistry"
 

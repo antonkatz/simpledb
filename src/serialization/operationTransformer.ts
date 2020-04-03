@@ -7,7 +7,7 @@ export function objToOp(raw: any): Operation<any, any, any> | undefined {
         const op = getRegisteredOperation(raw.opName)
         if (op) {
             const ctx = raw.ctx && rehydrate(raw.ctx)
-            return new op().withContext(ctx)
+            return new op().withContext(ctx) // fixme get back an instance instead of a constructor
         } else {
             throw new Error(`Unregistered operation: '${raw.opName}'`)
         }

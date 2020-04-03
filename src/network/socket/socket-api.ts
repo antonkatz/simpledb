@@ -15,11 +15,15 @@ export default async function startStreamingServer() {
     const cors = await import('cors').then(i => i.default)
 
     const app = express();
-    app.use(cors)
+    app.use(cors(
+        {
+            origin: true
+        }
+    ))
 
     const server = http.createServer(app);
 
-    const io = socketio(server, {serveClient: false})
+    const io = socketio(server, {serveClient: false, transports: ['websocket']})
 
     io.on('connection', (socket: any) => {
         console.log('user connected');
