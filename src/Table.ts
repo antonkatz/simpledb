@@ -6,6 +6,8 @@ import {AbstractIterator} from "abstract-leveldown"
 
 type TableStreamEntry<V> = { key: string, value: V, type: 'del' | 'put', doneResolver: (k: string) => void }
 
+export type TableRecord<V> = {key: string, value: V}
+
 export class Table<V> {
     private subject: Subject<TableStreamEntry<V>> = new Subject()
 
@@ -68,7 +70,7 @@ export class Table<V> {
     }
 
     rangeSync = async (fromKey: string, toKey?: string, limit= 1, reverse: boolean = false)
-        : Promise<{key: string, value: V}[]> => {
+        : Promise<TableRecord<V>[]> => {
         const stream =  (await this.db).createReadStream({
             gt: fromKey, lt: toKey, limit, reverse
         })

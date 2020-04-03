@@ -5,7 +5,7 @@ import {registerOperation} from "./operationRegistry"
 export class HeadOp<V> extends BasicOperation<void, V, { head: V }> {
 
     protected name: string = "HeadOp";
-    
+
     // @ts-ignore
     security(ctx: { head: V }): boolean {
         return true
@@ -17,3 +17,4 @@ export class HeadOp<V> extends BasicOperation<void, V, { head: V }> {
 }
 
 registerOperation(HeadOp);
+

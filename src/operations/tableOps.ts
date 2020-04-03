@@ -1,4 +1,4 @@
-import {Table} from "../Table"
+import {Table, TableRecord} from "../Table"
 import {BasicOperation} from "./Operation"
 import {Observable} from "rxjs"
 import {filter, first, flatMap, map, tap} from "rxjs/operators"
@@ -45,6 +45,34 @@ export class TableGetFirstOp<V>
 
 registerOperation(TableGetFirstOp)
 
+export class TableGetForUpdate<V>
+    extends BasicOperation<string, TableRecord<V>, { table: Table<V> }> {
+    protected name: string = "TableGetForUpdate";
+
+    security(ctx: { table: Table<V> }): boolean {
+        return true
+    }
+
+    operation(ctx: { table: Table<V> }, inObs: Observable<string>):
+        Observable<TableRecord<V>> {
+        console.log(`TableGetFirstOp ${JSON.stringify(ctx)}`)
+
+        return inObs.pipe(
+            flatMap(key => ctx.table.get(key).pipe(
+                // making sure is not empty and then reconstructing the record
+                filter(v => !!v),
+                map(v => {
+                    const value = v as V
+                    return {key, value}
+                })
+            )),
+            first()
+        )
+    }
+}
+
+registerOperation(TableGetForUpdate)
+
 export class TablePutOp<V>
     extends BasicOperation<{key: string, value: V}, string, { table: Table<V> }> {
 
@@ -61,7 +89,10 @@ export class TablePutOp<V>
     operation(ctx: { table: Table<V> }, inObs: Observable<{key: string, value: V}>):
         Observable<string> {
         return inObs.pipe(
-            flatMap(kv => ctx.table.put(kv.key, kv.value))
+            flatMap(kv => {
+                console.log(`Putting:\n${JSON.stringify(kv.value, null, 2)}`)
+                return ctx.table.put(kv.key, kv.value)
+            })
         )
     }
 }
@@ -96,3 +127,21 @@ export class TableFilterNotExists<V> extends BasicOperation<{key: string, value:
 }
 
 registerOperation(TableFilterNotExists)
+
+// export class UpdateRecordByActionOp<V, Z extends TableRecord<V>, A> extends BasicOperation<Z, Z, {action: A}> {
+//     protected name: string = 'UpdateRecordOp';
+//
+//     constructor(readonly updateWith: (inObs: Observable<Z>, action: A) => Observable<Z>) {
+//         super();
+//     }
+//
+//     operation(ctx: { action: A }, inObs: Observable<Z>): Observable<Z> {
+//         return this.updateWith(inObs, ctx.action);
+//     }
+//
+//     security(ctx: { action: A }): boolean {
+//         return true;
+//     }
+// }
+//
+// registerOperation()

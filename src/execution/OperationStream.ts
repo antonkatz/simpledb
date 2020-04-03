@@ -12,9 +12,9 @@ export interface OperationStream<In, Out, Context> {
     readonly symbol: Symbol
 
     readonly chain: List<Operation<any, any, any>>
-    readonly defaultContext?: Partial<Context>
+    defaultContext?: Partial<Context>
 
-    // setContext(ctx: Context): this
+    setContext(ctx: Context): this
     run(input: Observable<In>, ctx: Context): Observable<Out>
 
     add<NextOut, NextCtx>(op: Operation<Out, NextOut, NextCtx>): OperationStream<In, NextOut, NextCtx> // fixme. wrong ctx type?
@@ -27,8 +27,19 @@ export interface OperationStream<In, Out, Context> {
 export class BasicOperationStream<In, Out, Context> implements OperationStream<In, Out, Context> {
     readonly symbol = OperationStreamSymbol
 
+    defaultContext: Partial<Context> = {}
+
     constructor(readonly chain: List<Operation<any, any, any>> = List(),
-                readonly defaultContext?: Partial<Context>) {}
+        _defaultContext?: Partial<Context>) {
+        if (_defaultContext) {
+            this.defaultContext = _defaultContext
+        }
+    }
+
+    setContext(ctx: Context): this {
+        this.defaultContext = {...this.defaultContext, ...ctx}
+        return this
+    }
 
     run(input: Observable<In>, ctx?: Partial<Context>): Observable<Out> {
         const fullCtx = {...this.defaultContext, ...ctx}

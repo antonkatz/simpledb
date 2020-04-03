@@ -43,7 +43,7 @@ async function onStreamRequest(socket: any, dehydratedStream: string) {
 
     opStream.run(NEVER, {}).pipe(
         tap(v => {
-            console.log(`Server tapped ${v}`)
+            console.log(`Server tapped ${JSON.stringify(v)}`)
             socket.emit(opId, v)
         })
     ).subscribe()

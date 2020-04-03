@@ -7,8 +7,10 @@ import {registerTable} from "./tableRegistry"
 import {globalBasePath} from "./globalBasePath"
 export {globalBasePath}
 
+export type {TableRecord} from './Table'
+
 export {HeadOp} from "./operations/headOps"
-export {TableGetOp, TablePutOp, TableFilterNotExists} from "./operations/tableOps"
+export {TableGetOp, TablePutOp, TableFilterNotExists, TableGetForUpdate} from "./operations/tableOps"
 export {TrackMaxIdOp, WithIdAsTableKeyOp} from "./operations/idOps"
 
 export {fetchSimpleDb} from './network/http/http-client'
@@ -16,7 +18,7 @@ export {default as startStreamingServer} from './network/socket/socket-api'
 export {default as NetworkStream} from './network/socket/socket-client'
 
 export {BasicOperation} from "./operations/Operation"
-export {buildOpStream, BasicOperationStream} from './execution/OperationStream'
+export {buildOpStream, BasicOperationStream, OperationStream} from './execution/OperationStream'
 export {rehydrateOpStream} from "./serialization/index"
 export {registerOperation} from "./operations/operationRegistry"
 export {SecurityError} from './Security'

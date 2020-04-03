@@ -9,7 +9,7 @@ export function objToOp(raw: any): Operation<any, any, any> | undefined {
             const ctx = raw.ctx && rehydrate(raw.ctx)
             return new op().withContext(ctx)
         } else {
-            throw new Error('Unregistered operation')
+            throw new Error(`Unregistered operation: '${raw.opName}'`)
         }
     }
 
