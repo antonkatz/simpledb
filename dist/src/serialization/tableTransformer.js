@@ -1,0 +1,11 @@
+import { getRegisteredTable } from "../tableRegistry";
+export function objToTable(obj) {
+    if (obj.resourceType === "table" && obj.name) {
+        const table = getRegisteredTable(obj.name);
+        if (!table) {
+            throw new Error('Missing table from table registry');
+        }
+        return table;
+    }
+    return;
+}

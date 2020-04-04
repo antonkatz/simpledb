@@ -5,6 +5,7 @@ import {List} from "immutable"
 export const OperationSymbol = Symbol();
 
 export type OrEmpty<T> = T extends never ? {} : T
+// export type OrVoid<T> = T extends never ? void : T
 
 export interface Operation<In, Out, Context> {
     readonly symbol: Symbol

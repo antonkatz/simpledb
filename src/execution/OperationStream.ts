@@ -27,7 +27,7 @@ export interface OperationStream<In, Out, Context> {
 export class BasicOperationStream<In, Out, Context> implements OperationStream<In, Out, Context> {
     readonly symbol = OperationStreamSymbol
 
-    defaultContext: Partial<Context> = {}
+    defaultContext: any = {}
 
     constructor(readonly chain: List<Operation<any, any, any>> = List(),
         _defaultContext?: Partial<Context>) {
@@ -36,9 +36,8 @@ export class BasicOperationStream<In, Out, Context> implements OperationStream<I
         }
     }
 
-    setContext(ctx: Context): this {
-        this.defaultContext = {...this.defaultContext, ...ctx}
-        return this
+    setContext(ctx: Context): OperationStream<In, Out, {}> {
+        return new BasicOperationStream(this.chain, {...this.defaultContext, ...ctx})
     }
 
     run(input: Observable<In>, ctx?: Partial<Context>): Observable<Out> {

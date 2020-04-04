@@ -1,6 +1,6 @@
 import {AbstractLevelDOWNConstructor} from "abstract-leveldown"
 import leveldown from "leveldown"
-import {DbStringApiBuilder} from "../src"
+import {BasicOperation, DbStringApiBuilder} from "../src"
 import {BasicOperationStream, buildOpStream} from "../src/execution/OperationStream"
 import {List} from "immutable"
 import {rehydrateOpStreamFromJson} from "../src/serialization"
@@ -13,7 +13,7 @@ describe('Operation Streams', () => {
     const dbApiBuilder = DbStringApiBuilder(Promise.resolve(adapter))
 
     const table = dbApiBuilder({basePath: './db', name: `test-${Date.now()}-1`})
-    const getOp = new TableGetOp<string>().withContext({table})
+    const getOp: BasicOperation<string, string | undefined, {}> = new TableGetOp<string>().withContext({table})
 
     test('should be serializable', () => {
         const chain = List([getOp])

@@ -1,5 +1,5 @@
 import {OperationStream} from "../../execution/OperationStream";
-import {bindCallback, from, fromEvent, Observable} from "rxjs";
+import {bindCallback, from, fromEvent, Observable, NEVER} from "rxjs";
 import {ID_DIGEST, IS_BROWSER} from "../../index";
 import {flatMap, filter} from "rxjs/operators";
 
@@ -20,7 +20,9 @@ export default class NetworkStream {
 
     requestStream<Out>(opStream: OperationStream<void, Out, {}>): Observable<Out> {
         // todo make sure to ack
-        console.log('Attempting to request a stream from server')
+        console.log('Request to server is waiting to be subscibed')
+
+        if (!IS_BROWSER) return NEVER
 
         return from(this.socket).pipe(
             filter(s => !!s),
