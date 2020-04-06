@@ -14,19 +14,18 @@ export default class NetworkStream {
     }
     requestStream(opStream) {
         // todo make sure to ack
-        console.log('Request to server is waiting to be subscibed');
+        console.debug('Request to server is waiting to be subscibed');
         if (!IS_BROWSER)
             return NEVER;
         return from(this.socket).pipe(filter(s => !!s), flatMap(_socket => {
             const dehydratedStream = opStream.serialize();
             const socket = _socket;
             return ID_DIGEST(dehydratedStream).then(opId => {
-                console.log('Reqested network stream has id', opId);
-                console.log('Stream', dehydratedStream);
+                console.debug('Reqested network stream has id:', opId);
+                console.debug('Dehydrated stream:', dehydratedStream);
                 return { opId, socket, dehydratedStream };
             });
         }), flatMap(({ opId, socket, dehydratedStream }) => {
-            console.log(`Client expects reply on ${opId}`);
             socket.emit('streamRequest', dehydratedStream);
             return fromEvent(socket, opId);
         }));
