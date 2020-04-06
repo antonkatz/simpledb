@@ -12,9 +12,10 @@ export default class NetworkStream {
     connect() {
         if (IS_BROWSER) {
             const port = this.port ? `:${this.port}` : ''
-            const url = `${this.protocol}//${this.host}${port}/${this.path}`;
+            const url = `${this.protocol}//${this.host}${port}`;
+            console.log(`NetworkStream on ${this.path} ${port}`)
             this.socket = import('socket.io-client').then(({default: io}) =>
-                io(url, {transports: ['websocket']})
+                io(url, {transports: ['websocket'], path: this.path})
             )
         }
     }
