@@ -2,15 +2,17 @@ import { from, fromEvent, NEVER } from "rxjs";
 import { ID_DIGEST, IS_BROWSER } from "../../index";
 import { flatMap, filter } from "rxjs/operators";
 export default class NetworkStream {
-    constructor(host, protocol, port) {
+    constructor(host, protocol, port, path) {
         this.host = host;
         this.protocol = protocol;
         this.port = port;
+        this.path = path;
         this.socket = Promise.resolve();
     }
     connect() {
         if (IS_BROWSER) {
-            const url = `${this.protocol}//${this.host}:${this.port}`;
+            const port = this.port ? `:${this.port}` : '';
+            const url = `${this.protocol}//${this.host}${port}/${this.path}`;
             this.socket = import('socket.io-client').then(({ default: io }) => io(url, { transports: ['websocket'] }));
         }
     }
