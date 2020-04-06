@@ -3,6 +3,7 @@ import {NEVER} from "rxjs";
 import crypto from 'crypto'
 import {tap} from "rxjs/operators";
 import {ID_DIGEST} from "../../index";
+import {subscribeWithTracking, unsubscribleAll} from "./tracking";
 
 
 export default async function startStreamingServer() {
@@ -30,6 +31,8 @@ export default async function startStreamingServer() {
 
         const osr = (ds: string) => onStreamRequest(socket, ds)
         socket.on('streamRequest', osr)
+
+        socket.on('disconnect', () => unsubscribleAll(socket.id))
     })
 
     server.listen(3001)
@@ -45,10 +48,12 @@ async function onStreamRequest(socket: any, dehydratedStream: string) {
 
     console.log(`Rehydrated ${opId}`);
 
-    opStream.run(NEVER, {}).pipe(
+    const obs = opStream.run(NEVER, {}).pipe(
         tap(v => {
             console.log(`Server tapped ${JSON.stringify(v)}`)
             socket.emit(opId, v)
         })
-    ).subscribe()
+    )
+
+    subscribeWithTracking(socket.id, opId, obs)
 }

@@ -2,6 +2,7 @@ import { rehydrateOpStreamFromJson } from "../../serialization";
 import { NEVER } from "rxjs";
 import { tap } from "rxjs/operators";
 import { ID_DIGEST } from "../../index";
+import { subscribeWithTracking, unsubscribleAll } from "./tracking";
 export default async function startStreamingServer() {
     console.log('Starting streaming server');
     const express = await import("express").then(i => i.default);
@@ -19,6 +20,7 @@ export default async function startStreamingServer() {
         console.log('user connected');
         const osr = (ds) => onStreamRequest(socket, ds);
         socket.on('streamRequest', osr);
+        socket.on('disconnect', () => unsubscribleAll(socket.id));
     });
     server.listen(3001);
 }
@@ -28,8 +30,9 @@ async function onStreamRequest(socket, dehydratedStream) {
     console.log(`Rehydrating '${opId}'`);
     const opStream = rehydrateOpStreamFromJson(dehydratedStream);
     console.log(`Rehydrated ${opId}`);
-    opStream.run(NEVER, {}).pipe(tap(v => {
+    const obs = opStream.run(NEVER, {}).pipe(tap(v => {
         console.log(`Server tapped ${JSON.stringify(v)}`);
         socket.emit(opId, v);
-    })).subscribe();
+    }));
+    subscribeWithTracking(socket.id, opId, obs);
 }
