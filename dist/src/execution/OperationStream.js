@@ -6,16 +6,19 @@ export class BasicOperationStream {
     constructor(chain = List(), _defaultContext) {
         this.chain = chain;
         this.symbol = OperationStreamSymbol;
-        this.defaultContext = {};
+        this.innerContext = {};
         if (_defaultContext) {
-            this.defaultContext = _defaultContext;
+            this.innerContext = _defaultContext;
         }
     }
+    getContext() {
+        return this.innerContext;
+    }
     setContext(ctx) {
-        return new BasicOperationStream(this.chain, { ...this.defaultContext, ...ctx });
+        return new BasicOperationStream(this.chain, { ...this.innerContext, ...ctx });
     }
     run(input, ctx) {
-        const fullCtx = { ...this.defaultContext, ...ctx };
+        const fullCtx = { ...this.innerContext, ...ctx };
         this.securityCheck(fullCtx);
         const first = this.chain.first();
         if (first) {
@@ -38,16 +41,16 @@ export class BasicOperationStream {
         });
     }
     add(op) {
-        return new BasicOperationStream(this.chain.push(op), this.defaultContext);
+        return new BasicOperationStream(this.chain.push(op), this.innerContext);
     }
     join(otherStream) {
-        const thisCtx = { ...(this.defaultContext || {}) };
-        const otherCtx = { ...(otherStream.defaultContext || {}) };
+        const thisCtx = { ...(this.innerContext || {}) };
+        const otherCtx = { ...(otherStream.getContext() || {}) };
         const fullCtx = { ...thisCtx, ...otherCtx };
         return new BasicOperationStream(this.chain.concat(otherStream.chain), fullCtx);
     }
     serialize() {
-        const obj = { ctx: this.defaultContext, chain: this.chain.toJSON() };
+        const obj = { ctx: this.innerContext, chain: this.chain.toJSON() };
         return JSON.stringify(obj);
     }
 }

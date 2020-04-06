@@ -14,7 +14,6 @@ export class BasicOperation {
         return new class extends BasicOperation {
             constructor() {
                 super(...arguments);
-                this.context = { ..._s.context, ...andContext };
                 this.name = _s.getOpName();
             }
             operation(ctx, inObs) {

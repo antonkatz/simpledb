@@ -11,7 +11,7 @@ export function subscribeWithTracking(clientId, opId, obs) {
     activeRequests = activeRequests.set(clientId, client.set(opId, subscription));
 }
 function remove(clientId, opId) {
-    console.log(`Removing subscription ${clientId} ${opId}`);
+    console.debug(`Removing subscription ${clientId} ${opId}`);
     const client = Maybe.fromNull(activeRequests.get(clientId));
     client
         .flatMap(_ => Maybe.fromNull(_.get(opId)))
@@ -19,7 +19,7 @@ function remove(clientId, opId) {
     client.map(_ => _.remove(opId)).forEach(_ => activeRequests = activeRequests.set(clientId, _));
 }
 export function unsubscribleAll(clientId) {
-    console.log(`Removing all subscriptions for client ${clientId}`);
+    console.debug(`Removing all subscriptions for client ${clientId}`);
     const requests = activeRequests.get(clientId);
     if (requests) {
         requests.valueSeq().forEach(s => s.unsubscribe());
