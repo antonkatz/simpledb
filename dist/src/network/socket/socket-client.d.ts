@@ -5,6 +5,6 @@ export default class NetworkStream {
     private socket;
     constructor(host: string);
     connect(): void;
-    requestStream<Out>(opStream: OperationStream<void, Out, {}>): Observable<Out>;
+    requestStream<Out>(opStream: OperationStream<void, Out, never>): Observable<Out>;
 }
 //# sourceMappingURL=socket-client.d.ts.map

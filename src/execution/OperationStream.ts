@@ -12,14 +12,16 @@ export interface OperationStream<In, Out, Context> {
     readonly symbol: Symbol
 
     readonly chain: List<Operation<any, any, any>>
-    defaultContext?: Partial<Context>
+    // defaultContext?: Partial<Context>
 
-    setContext(ctx: Context): OperationStream<In, Out, {}>
+    getContext(): any
+    setContext(ctx: Context): OperationStream<In, Out, never>
+
     run(input: Observable<In>, ctx: Context): Observable<Out>
 
-    add<NextOut, NextCtx>(op: Operation<Out, NextOut, NextCtx>): OperationStream<In, NextOut, NextCtx> // fixme. wrong ctx type?
+    add<NextOut, NextCtx>(op: Operation<Out, NextOut, NextCtx>): OperationStream<In, NextOut, OrEmpty<NextCtx> & OrEmpty<Context>>
     join<NextOut, OtherCtx>(otherStream: OperationStream<Out, NextOut, OtherCtx>):
-        OperationStream<In, NextOut, OtherCtx & Context>
+        OperationStream<In, NextOut, OrEmpty<OtherCtx> & OrEmpty<Context>>
 
     serialize(): string
 }
@@ -27,21 +29,25 @@ export interface OperationStream<In, Out, Context> {
 export class BasicOperationStream<In, Out, Context> implements OperationStream<In, Out, Context> {
     readonly symbol = OperationStreamSymbol
 
-    defaultContext: any = {}
+    innerContext: any = {}
 
     constructor(readonly chain: List<Operation<any, any, any>> = List(),
-        _defaultContext?: Partial<Context>) {
+        _defaultContext?: {}) {
         if (_defaultContext) {
-            this.defaultContext = _defaultContext
+            this.innerContext = _defaultContext
         }
     }
 
-    setContext(ctx: Context): OperationStream<In, Out, {}> {
-        return new BasicOperationStream(this.chain, {...this.defaultContext, ...ctx})
+    getContext(): any {
+        return this.innerContext
+    }
+
+    setContext(ctx: Context): OperationStream<In, Out, never> {
+        return new BasicOperationStream(this.chain, {...this.innerContext, ...ctx})
     }
 
     run(input: Observable<In>, ctx?: Partial<Context>): Observable<Out> {
-        const fullCtx = {...this.defaultContext, ...ctx}
+        const fullCtx = {...this.innerContext, ...ctx}
 
         this.securityCheck(fullCtx)
 
@@ -68,14 +74,14 @@ export class BasicOperationStream<In, Out, Context> implements OperationStream<I
     }
 
     add<NextOut, NextCtx>(op: Operation<Out, NextOut, NextCtx>):
-        OperationStream<In, NextOut, Partial<NextCtx & Context> > {
-        return new BasicOperationStream(this.chain.push(op), this.defaultContext)
+        OperationStream<In, NextOut, OrEmpty<NextCtx> & OrEmpty<Context> > {
+        return new BasicOperationStream<In, NextOut, OrEmpty<NextCtx> & OrEmpty<Context>>(this.chain.push(op), this.innerContext)
     }
 
     join<NextOut, OtherCtx>(otherStream: OperationStream<Out, NextOut, OtherCtx>):
-        OperationStream<In, NextOut, OtherCtx & Context> {
-        const thisCtx: Partial<Context> = {...(this.defaultContext || {})}
-        const otherCtx: Partial<OtherCtx> = {...(otherStream.defaultContext || {})}
+        OperationStream<In, NextOut, OrEmpty<OtherCtx> & OrEmpty<Context>> {
+        const thisCtx: Partial<Context> = {...(this.innerContext || {})}
+        const otherCtx: Partial<OtherCtx> = {...(otherStream.getContext() || {})}
         const fullCtx: Partial<Context & OtherCtx> = {...thisCtx, ...otherCtx} as Partial<Context & OtherCtx>
 
         return new BasicOperationStream(
@@ -84,7 +90,7 @@ export class BasicOperationStream<In, Out, Context> implements OperationStream<I
     }
 
     serialize() {
-        const obj: SerializedOperationStream = {ctx: this.defaultContext, chain: this.chain.toJSON()}
+        const obj: SerializedOperationStream = {ctx: this.innerContext, chain: this.chain.toJSON()}
         return JSON.stringify(obj)
     }
 }

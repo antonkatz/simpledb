@@ -9,6 +9,7 @@ export { TrackMaxIdOp, WithIdAsTableKeyOp } from "./operations/idOps";
 export { fetchSimpleDb } from './network/http/http-client';
 export { default as startStreamingServer } from './network/socket/socket-api';
 export { default as NetworkStream } from './network/socket/socket-client';
+export type { OrEmpty, Operation } from './operations/Operation';
 export { BasicOperation } from "./operations/Operation";
 export { buildOpStream, BasicOperationStream, OperationStream } from './execution/OperationStream';
 export { rehydrateOpStream } from "./serialization/index";

@@ -5,7 +5,7 @@ import {List} from "immutable"
 export const OperationSymbol = Symbol();
 
 export type OrEmpty<T> = T extends never ? {} : T
-// export type OrVoid<T> = T extends never ? void : T
+export type OrVoid<T> = T extends never ? void : T
 
 export interface Operation<In, Out, Context> {
     readonly symbol: Symbol
@@ -13,16 +13,17 @@ export interface Operation<In, Out, Context> {
     readonly security: (ctx: Context) => boolean
 
     getOpName(): string
-    withContext<PCtx extends Partial<Context>, NextCtx extends OrEmpty<Omit<Context, keyof PCtx>>>(andContext: PCtx):
-        BasicOperation<In, Out, NextCtx>
+    withContext<PCtx extends Partial<Context>>(andContext: PCtx):
+        BasicOperation<In, Out, Omit<Context, keyof PCtx>>
 
     chain<NextOut, NextCtx>(op: Operation<Out, NextOut, NextCtx>):
-        OperationStream<In, NextOut, NextCtx & Context>
+        OperationStream<In, NextOut, OrEmpty<NextCtx> & OrEmpty<Context>>
     chain<NextOut, NextCtx>(opStream: OperationStream<Out, NextOut, NextCtx>):
-        OperationStream<In, NextOut, NextCtx & Context>
+        OperationStream<In, NextOut, OrEmpty<NextCtx> & OrEmpty<Context>>
 
-    toJSON(): {opName: string, ctx: Partial<Context>}
+    toJSON(): {opName: string, ctx: any}
 }
+
 export abstract class BasicOperation<In, Out, Context> implements Operation<In, Out, Context> {
     readonly symbol = OperationSymbol;
 
@@ -36,12 +37,11 @@ export abstract class BasicOperation<In, Out, Context> implements Operation<In, 
         return this.name
     }
 
-    withContext<PCtx extends Partial<Context>, NextCtx extends OrEmpty<Omit<Context, keyof PCtx>>>(andContext: PCtx):
+    withContext<PCtx extends Partial<Context>, NextCtx extends Omit<Context, keyof PCtx>>(andContext: PCtx):
         BasicOperation<In, Out, NextCtx> {
         const _s = this;
 
         return new class extends BasicOperation<In, Out, NextCtx> {
-            context = {..._s.context, ...andContext};
             name = _s.getOpName();
 
             operation(ctx: NextCtx, inObs: Observable<In>): Observable<Out> {
@@ -57,11 +57,11 @@ export abstract class BasicOperation<In, Out, Context> implements Operation<In, 
     }
 
     chain<NextOut, NextCtx>(op: Operation<Out, NextOut, NextCtx>):
-        OperationStream<In, NextOut, NextCtx & Context>
+        OperationStream<In, NextOut, OrEmpty<NextCtx> & OrEmpty<Context>>
     chain<NextOut, NextCtx>(opStream: OperationStream<Out, NextOut, NextCtx>):
-        OperationStream<In, NextOut, NextCtx & Context>
+        OperationStream<In, NextOut, OrEmpty<NextCtx> & OrEmpty<Context>>
     chain<NextOut, NextCtx>(opOrStream: Operation<Out, NextOut, NextCtx> | OperationStream<Out, NextOut, NextCtx>):
-        OperationStream<In, NextOut, NextCtx & Context> {
+        OperationStream<In, NextOut, OrEmpty<NextCtx> & OrEmpty<Context>> {
 
         if (opOrStream.symbol === OperationSymbol) {
             const op = opOrStream as Operation<Out, NextOut, NextCtx>;

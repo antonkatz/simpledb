@@ -18,7 +18,7 @@ export default class NetworkStream {
         }
     }
 
-    requestStream<Out>(opStream: OperationStream<void, Out, {}>): Observable<Out> {
+    requestStream<Out>(opStream: OperationStream<void, Out, never>): Observable<Out> {
         // todo make sure to ack
         console.debug('Request to server is waiting to be subscibed')
 
