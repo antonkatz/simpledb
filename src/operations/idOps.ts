@@ -10,7 +10,7 @@ export class TrackMaxIdOp extends BasicOperation<string, string, {metadataTable:
 
     protected name: string = "TrackMaxIdOp";
 
-    operation(ctx: { metadataTable: Table<string> }, inObs: Observable<string>): Observable<string> {
+    _operation(ctx: { metadataTable: Table<string> }, inObs: Observable<string>): Observable<string> {
         const f = (id: string) => TrackMaxIdOp.replaceIfGreater(ctx.metadataTable, id);
         return inObs.pipe(
             tap(f)
@@ -26,7 +26,7 @@ export class TrackMaxIdOp extends BasicOperation<string, string, {metadataTable:
         }
     }
 
-    security(ctx: { metadataTable: Table<string> }): boolean {
+    _security(ctx: { metadataTable: Table<string> }): boolean {
         return true;
     }
 }
@@ -36,13 +36,13 @@ registerOperation(TrackMaxIdOp);
 export class WithIdAsTableKeyOp<In extends { id: string }> extends BasicOperation<In, {key: string, value: In}, {}> {
     protected name = "WithIdAsTableKeyOp"
 
-    operation(ctx: {}, inObs: Observable<In>): Observable<{ key: string; value: In }> {
+    _operation(ctx: {}, inObs: Observable<In>): Observable<{ key: string; value: In }> {
         return inObs.pipe(
             map(obj => ({key: obj.id, value: obj}))
         )
     }
 
-    security(ctx: {}): boolean {
+    _security(ctx: {}): boolean {
         return true;
     }
 }

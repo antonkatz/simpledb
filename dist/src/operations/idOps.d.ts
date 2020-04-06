@@ -6,11 +6,11 @@ export declare class TrackMaxIdOp extends BasicOperation<string, string, {
     metadataTable: Table<string>;
 }> {
     protected name: string;
-    operation(ctx: {
+    _operation(ctx: {
         metadataTable: Table<string>;
     }, inObs: Observable<string>): Observable<string>;
     private static replaceIfGreater;
-    security(ctx: {
+    _security(ctx: {
         metadataTable: Table<string>;
     }): boolean;
 }
@@ -21,10 +21,10 @@ export declare class WithIdAsTableKeyOp<In extends {
     value: In;
 }, {}> {
     protected name: string;
-    operation(ctx: {}, inObs: Observable<In>): Observable<{
+    _operation(ctx: {}, inObs: Observable<In>): Observable<{
         key: string;
         value: In;
     }>;
-    security(ctx: {}): boolean;
+    _security(ctx: {}): boolean;
 }
 //# sourceMappingURL=idOps.d.ts.map

@@ -9,8 +9,8 @@ export type OrVoid<T> = T extends never ? void : T
 
 export interface Operation<In, Out, Context> {
     readonly symbol: Symbol
-    readonly operation: (ctx: Context, inObs: Observable<In>) => Observable<Out>
-    readonly security: (ctx: Context) => boolean
+    operation: (ctx: Context, inObs: Observable<In>) => Observable<Out>
+    security: (ctx: Context) => boolean
 
     getOpName(): string
     withContext<PCtx extends Partial<Context>>(andContext: PCtx):
@@ -27,11 +27,11 @@ export interface Operation<In, Out, Context> {
 export abstract class BasicOperation<In, Out, Context> implements Operation<In, Out, Context> {
     readonly symbol = OperationSymbol;
 
-    context = {};
+    protected context: any = {};
     protected abstract name: string;
 
-    abstract security(ctx: Context): boolean
-    abstract operation(ctx: Context, inObs: Observable<In>): Observable<Out>
+    abstract _security(ctx: Context): boolean
+    abstract _operation(ctx: Context, inObs: Observable<In>): Observable<Out>
 
     getOpName() {
         return this.name
@@ -40,21 +40,32 @@ export abstract class BasicOperation<In, Out, Context> implements Operation<In, 
     withContext<PCtx extends Partial<Context>, NextCtx extends Omit<Context, keyof PCtx>>(andContext: PCtx):
         BasicOperation<In, Out, NextCtx> {
         const _s = this;
+        const oldContext = this.context
 
         return new class extends BasicOperation<In, Out, NextCtx> {
             name = _s.getOpName();
-
-            operation(ctx: NextCtx, inObs: Observable<In>): Observable<Out> {
-                const fullCtx = {...andContext, ...ctx} as unknown as Context;
-                return _s.operation(fullCtx, inObs)
+            context = {...oldContext, ...andContext}
+            _security(ctx: NextCtx): boolean {
+                // @ts-ignore
+                return _s._security(ctx);
             }
-
-            security(ctx: NextCtx): boolean {
-                const fullCtx = {...andContext, ...ctx} as unknown as Context;
-                return _s.security(fullCtx)
+            _operation(ctx: NextCtx, inObs: Observable<In>): Observable<Out> {
+                // @ts-ignore
+                return _s._operation(ctx, inObs);
             }
         }
     }
+
+    operation(ctx: Context, inObs: Observable<In>): Observable<Out> {
+        const fullCtx = {...this.context, ...ctx} as unknown as Context;
+        return this._operation(fullCtx, inObs)
+    }
+
+    security(ctx: Context): boolean {
+        const fullCtx = {...this.context, ...ctx} as unknown as Context;
+        return this._security(fullCtx)
+    }
+
 
     chain<NextOut, NextCtx>(op: Operation<Out, NextOut, NextCtx>):
         OperationStream<In, NextOut, OrEmpty<NextCtx> & OrEmpty<Context>>

@@ -39,7 +39,7 @@ export class Table<V> {
     }
 
     get = (key: string): Observable<V | undefined> => {
-        console.log(`Table [${this.name}] .get '${key}' `)
+        console.log(`Table [${this.name}] getting key '${key}' `)
         const existing = this.db.then(db => db.get(key))
             .then(this.codec.rehydrate)
             .catch(e => {

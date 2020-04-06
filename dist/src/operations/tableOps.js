@@ -6,10 +6,10 @@ export class TableGetOp extends BasicOperation {
         super(...arguments);
         this.name = "TableGetOp";
     }
-    security(ctx) {
+    _security(ctx) {
         return true;
     }
-    operation(ctx, inObs) {
+    _operation(ctx, inObs) {
         console.log(`TableGetOp ${JSON.stringify(ctx)}`);
         return inObs.pipe(flatMap(key => ctx.table.get(key)));
     }
@@ -20,10 +20,10 @@ export class TableGetFirstOp extends BasicOperation {
         super(...arguments);
         this.name = "TableGetFirstOp";
     }
-    security(ctx) {
+    _security(ctx) {
         return true;
     }
-    operation(ctx, inObs) {
+    _operation(ctx, inObs) {
         console.log(`TableGetFirstOp ${JSON.stringify(ctx)}`);
         return inObs.pipe(flatMap(key => ctx.table.get(key)), first());
     }
@@ -34,15 +34,16 @@ export class TableGetForUpdate extends BasicOperation {
         super(...arguments);
         this.name = "TableGetForUpdate";
     }
-    security(ctx) {
+    _security(ctx) {
         return true;
     }
-    operation(ctx, inObs) {
-        console.log(`TableGetFirstOp ${JSON.stringify(ctx)}`);
+    _operation(ctx, inObs) {
+        console.log(`TableGetForUpdate ${JSON.stringify(ctx)}`);
         return inObs.pipe(flatMap(key => ctx.table.get(key).pipe(
         // making sure is not empty and then reconstructing the record
         filter(v => !!v), map(v => {
             const value = v;
+            console.debug(`Got for update ${JSON.stringify(v)}`);
             return { key, value };
         }))), first());
     }
@@ -53,10 +54,10 @@ export class TablePutOp extends BasicOperation {
         super();
         this.name = "TablePutOp";
     }
-    security(ctx) {
+    _security(ctx) {
         return true;
     }
-    operation(ctx, inObs) {
+    _operation(ctx, inObs) {
         return inObs.pipe(flatMap(kv => {
             console.log(`Putting:\n${JSON.stringify(kv.value, null, 2)}`);
             return ctx.table.put(kv.key, kv.value);
@@ -69,10 +70,10 @@ export class TableFilterNotExists extends BasicOperation {
         super();
         this.name = "TableFilterNotExists";
     }
-    security(ctx) {
+    _security(ctx) {
         return true;
     }
-    operation(ctx, inObs) {
+    _operation(ctx, inObs) {
         return inObs.pipe(flatMap(kv => {
             // console.log('filtering on ' + JSON.stringify(kv))
             return ctx.table.get(kv.key).pipe(map(existing => [!!existing, kv]), first());
@@ -87,11 +88,11 @@ registerOperation(TableFilterNotExists);
 //         super();
 //     }
 //
-//     operation(ctx: { action: A }, inObs: Observable<Z>): Observable<Z> {
+//     _operation(ctx: { action: A }, inObs: Observable<Z>): Observable<Z> {
 //         return this.updateWith(inObs, ctx.action);
 //     }
 //
-//     security(ctx: { action: A }): boolean {
+//     _security(ctx: { action: A }): boolean {
 //         return true;
 //     }
 // }

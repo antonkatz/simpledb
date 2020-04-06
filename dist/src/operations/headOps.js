@@ -7,10 +7,11 @@ export class HeadOp extends BasicOperation {
         this.name = "HeadOp";
     }
     // @ts-ignore
-    security(ctx) {
+    _security(ctx) {
         return true;
     }
-    operation(ctx) {
+    _operation(ctx) {
+        console.log(`${this.name} executed with context ${JSON.stringify(ctx)}`);
         return from([ctx.head]);
     }
 }

@@ -7,7 +7,7 @@ export class TrackMaxIdOp extends BasicOperation {
         super(...arguments);
         this.name = "TrackMaxIdOp";
     }
-    operation(ctx, inObs) {
+    _operation(ctx, inObs) {
         const f = (id) => TrackMaxIdOp.replaceIfGreater(ctx.metadataTable, id);
         return inObs.pipe(tap(f));
     }
@@ -19,7 +19,7 @@ export class TrackMaxIdOp extends BasicOperation {
             metaTable.put(MAX_KEY_METADATA_KEY, id);
         }
     }
-    security(ctx) {
+    _security(ctx) {
         return true;
     }
 }
@@ -29,10 +29,10 @@ export class WithIdAsTableKeyOp extends BasicOperation {
         super(...arguments);
         this.name = "WithIdAsTableKeyOp";
     }
-    operation(ctx, inObs) {
+    _operation(ctx, inObs) {
         return inObs.pipe(map(obj => ({ key: obj.id, value: obj })));
     }
-    security(ctx) {
+    _security(ctx) {
         return true;
     }
 }

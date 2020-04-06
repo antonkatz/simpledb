@@ -4,10 +4,10 @@ export declare class HeadOp<V> extends BasicOperation<void, V, {
     head: V;
 }> {
     protected name: string;
-    security(ctx: {
+    _security(ctx: {
         head: V;
     }): boolean;
-    operation(ctx: {
+    _operation(ctx: {
         head: V;
     }): Observable<V>;
 }

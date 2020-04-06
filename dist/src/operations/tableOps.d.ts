@@ -5,10 +5,10 @@ export declare class TableGetOp<V> extends BasicOperation<string, V | undefined,
     table: Table<V>;
 }> {
     protected name: string;
-    security(ctx: {
+    _security(ctx: {
         table: Table<V>;
     }): boolean;
-    operation(ctx: {
+    _operation(ctx: {
         table: Table<V>;
     }, inObs: Observable<string>): Observable<V | undefined>;
 }
@@ -16,10 +16,10 @@ export declare class TableGetFirstOp<V> extends BasicOperation<string, V | undef
     table: Table<V>;
 }> {
     protected name: string;
-    security(ctx: {
+    _security(ctx: {
         table: Table<V>;
     }): boolean;
-    operation(ctx: {
+    _operation(ctx: {
         table: Table<V>;
     }, inObs: Observable<string>): Observable<V | undefined>;
 }
@@ -27,10 +27,10 @@ export declare class TableGetForUpdate<V> extends BasicOperation<string, TableRe
     table: Table<V>;
 }> {
     protected name: string;
-    security(ctx: {
+    _security(ctx: {
         table: Table<V>;
     }): boolean;
-    operation(ctx: {
+    _operation(ctx: {
         table: Table<V>;
     }, inObs: Observable<string>): Observable<TableRecord<V>>;
 }
@@ -42,10 +42,10 @@ export declare class TablePutOp<V> extends BasicOperation<{
 }> {
     protected name: string;
     constructor();
-    security(ctx: {
+    _security(ctx: {
         table: Table<V>;
     }): boolean;
-    operation(ctx: {
+    _operation(ctx: {
         table: Table<V>;
     }, inObs: Observable<{
         key: string;
@@ -63,10 +63,10 @@ export declare class TableFilterNotExists<V> extends BasicOperation<{
 }> {
     protected name: string;
     constructor();
-    security(ctx: {
+    _security(ctx: {
         table: Table<V>;
     }): boolean;
-    operation(ctx: {
+    _operation(ctx: {
         table: Table<V>;
     }, inObs: Observable<{
         key: string;

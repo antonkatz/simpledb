@@ -7,11 +7,12 @@ export class HeadOp<V> extends BasicOperation<void, V, { head: V }> {
     protected name: string = "HeadOp";
 
     // @ts-ignore
-    security(ctx: { head: V }): boolean {
+    _security(ctx: { head: V }): boolean {
         return true
     }
 
-    operation(ctx: { head: V }): Observable<V> {
+    _operation(ctx: { head: V }): Observable<V> {
+        console.log(`${this.name} executed with context ${JSON.stringify(ctx)}`)
         return from([ctx.head])
     }
 }

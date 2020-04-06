@@ -8,11 +8,11 @@ export class TableGetOp<V>
     extends BasicOperation<string, V | undefined, { table: Table<V> }> {
     protected name: string = "TableGetOp";
 
-    security(ctx: { table: Table<V> }): boolean {
+    _security(ctx: { table: Table<V> }): boolean {
         return true
     }
 
-    operation(ctx: { table: Table<V> }, inObs: Observable<string>):
+    _operation(ctx: { table: Table<V> }, inObs: Observable<string>):
         Observable<V | undefined> {
         console.log(`TableGetOp ${JSON.stringify(ctx)}`)
 
@@ -28,11 +28,11 @@ export class TableGetFirstOp<V>
     extends BasicOperation<string, V | undefined, { table: Table<V> }> {
     protected name: string = "TableGetFirstOp";
 
-    security(ctx: { table: Table<V> }): boolean {
+    _security(ctx: { table: Table<V> }): boolean {
         return true
     }
 
-    operation(ctx: { table: Table<V> }, inObs: Observable<string>):
+    _operation(ctx: { table: Table<V> }, inObs: Observable<string>):
         Observable<V | undefined> {
         console.log(`TableGetFirstOp ${JSON.stringify(ctx)}`)
 
@@ -49,11 +49,11 @@ export class TableGetForUpdate<V>
     extends BasicOperation<string, TableRecord<V>, { table: Table<V> }> {
     protected name: string = "TableGetForUpdate";
 
-    security(ctx: { table: Table<V> }): boolean {
+    _security(ctx: { table: Table<V> }): boolean {
         return true
     }
 
-    operation(ctx: { table: Table<V> }, inObs: Observable<string>):
+    _operation(ctx: { table: Table<V> }, inObs: Observable<string>):
         Observable<TableRecord<V>> {
         console.log(`TableGetForUpdate ${JSON.stringify(ctx)}`)
 
@@ -63,6 +63,7 @@ export class TableGetForUpdate<V>
                 filter(v => !!v),
                 map(v => {
                     const value = v as V
+                    console.debug(`Got for update ${JSON.stringify(v)}`)
                     return {key, value}
                 })
             )),
@@ -82,11 +83,11 @@ export class TablePutOp<V>
         super();
     }
 
-    security(ctx: { table: Table<V> }): boolean {
+    _security(ctx: { table: Table<V> }): boolean {
         return true
     }
 
-    operation(ctx: { table: Table<V> }, inObs: Observable<{key: string, value: V}>):
+    _operation(ctx: { table: Table<V> }, inObs: Observable<{key: string, value: V}>):
         Observable<string> {
         return inObs.pipe(
             flatMap(kv => {
@@ -106,11 +107,11 @@ export class TableFilterNotExists<V> extends BasicOperation<{key: string, value:
         super();
     }
 
-    security(ctx: { table: Table<V> }): boolean {
+    _security(ctx: { table: Table<V> }): boolean {
         return true
     }
 
-    operation(ctx: { table: Table<V> }, inObs: Observable<{ key: string }>): Observable<{key: string, value: V}> {
+    _operation(ctx: { table: Table<V> }, inObs: Observable<{ key: string }>): Observable<{key: string, value: V}> {
         return inObs.pipe(
             flatMap(kv => {
                 // console.log('filtering on ' + JSON.stringify(kv))
@@ -135,11 +136,11 @@ registerOperation(TableFilterNotExists)
 //         super();
 //     }
 //
-//     operation(ctx: { action: A }, inObs: Observable<Z>): Observable<Z> {
+//     _operation(ctx: { action: A }, inObs: Observable<Z>): Observable<Z> {
 //         return this.updateWith(inObs, ctx.action);
 //     }
 //
-//     security(ctx: { action: A }): boolean {
+//     _security(ctx: { action: A }): boolean {
 //         return true;
 //     }
 // }

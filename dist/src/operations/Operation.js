@@ -11,20 +11,30 @@ export class BasicOperation {
     }
     withContext(andContext) {
         const _s = this;
+        const oldContext = this.context;
         return new class extends BasicOperation {
             constructor() {
                 super(...arguments);
                 this.name = _s.getOpName();
+                this.context = { ...oldContext, ...andContext };
             }
-            operation(ctx, inObs) {
-                const fullCtx = { ...andContext, ...ctx };
-                return _s.operation(fullCtx, inObs);
+            _security(ctx) {
+                // @ts-ignore
+                return _s._security(ctx);
             }
-            security(ctx) {
-                const fullCtx = { ...andContext, ...ctx };
-                return _s.security(fullCtx);
+            _operation(ctx, inObs) {
+                // @ts-ignore
+                return _s._operation(ctx, inObs);
             }
         };
+    }
+    operation(ctx, inObs) {
+        const fullCtx = { ...this.context, ...ctx };
+        return this._operation(fullCtx, inObs);
+    }
+    security(ctx) {
+        const fullCtx = { ...this.context, ...ctx };
+        return this._security(fullCtx);
     }
     chain(opOrStream) {
         if (opOrStream.symbol === OperationSymbol) {
