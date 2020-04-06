@@ -27,7 +27,7 @@ export default async function startStreamingServer() {
     const io = socketio(server, {serveClient: false, transports: ['websocket']})
 
     io.on('connection', (socket: any) => {
-        console.log('user connected');
+        console.debug(`User connected: ${socket.id}`);
 
         const osr = (ds: string) => onStreamRequest(socket, ds)
         socket.on('streamRequest', osr)
@@ -39,18 +39,14 @@ export default async function startStreamingServer() {
 }
 
 async function onStreamRequest(socket: any, dehydratedStream: string) {
-    console.log(`Server got: ${dehydratedStream}`)
+    console.debug(`Server got dehydrated: ${dehydratedStream}`)
 
     const opId = await ID_DIGEST(dehydratedStream)
-    console.log(`Rehydrating '${opId}'`);
-
     const opStream = rehydrateOpStreamFromJson(dehydratedStream);
-
-    console.log(`Rehydrated ${opId}`);
 
     const obs = opStream.run(NEVER, {}).pipe(
         tap(v => {
-            console.log(`Server tapped ${JSON.stringify(v)}`)
+            console.debug(`Server tapped: ${JSON.stringify(v)}`)
             socket.emit(opId, v)
         })
     )

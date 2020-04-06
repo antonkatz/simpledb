@@ -19,7 +19,7 @@ export function subscribeWithTracking(clientId: string, opId: string, obs: Obser
 }
 
 function remove(clientId: string, opId: string) {
-    console.log(`Removing subscription ${clientId} ${opId}`);
+    console.debug(`Removing subscription ${clientId} ${opId}`);
 
     const client = Maybe.fromNull(activeRequests.get(clientId));
 
@@ -31,7 +31,7 @@ function remove(clientId: string, opId: string) {
 }
 
 export function unsubscribleAll(clientId: string) {
-    console.log(`Removing all subscriptions for client ${clientId}`);
+    console.debug(`Removing all subscriptions for client ${clientId}`);
 
     const requests = activeRequests.get(clientId);
     if (requests) {
