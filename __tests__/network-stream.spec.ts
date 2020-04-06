@@ -3,7 +3,7 @@ import {buildOpStream} from "../src/execution/OperationStream";
 
 describe("Streaming network operations", () => {
     const server = startStreamingServer()
-    const client = new NetworkStream('localhost')
+    const client = new NetworkStream('localhost', 'http:', 3001)
 
     test('should establish a connection', () => {
         client.connect()

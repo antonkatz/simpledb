@@ -6,12 +6,12 @@ import {flatMap, filter} from "rxjs/operators";
 export default class NetworkStream {
     private socket: Promise<SocketIOClient.Socket | void> = Promise.resolve();
 
-    constructor(readonly host: string) {
+    constructor(readonly host: string, readonly protocol: string, readonly port: number) {
     }
 
     connect() {
         if (IS_BROWSER) {
-            const url = `http://${this.host}:3001`;
+            const url = `${this.protocol}//${this.host}:${this.port}`;
             this.socket = import('socket.io-client').then(({default: io}) =>
                 io(url, {transports: ['websocket']})
             )
