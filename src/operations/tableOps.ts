@@ -55,7 +55,7 @@ export class TableGetForUpdate<V>
 
     operation(ctx: { table: Table<V> }, inObs: Observable<string>):
         Observable<TableRecord<V>> {
-        console.log(`TableGetFirstOp ${JSON.stringify(ctx)}`)
+        console.log(`TableGetForUpdate ${JSON.stringify(ctx)}`)
 
         return inObs.pipe(
             flatMap(key => ctx.table.get(key).pipe(

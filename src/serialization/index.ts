@@ -11,8 +11,6 @@ export function rehydrateOpStream(dehydratedOpStream: SerializedOperationStream)
         const chain = List(dehydratedOpStream.chain.map(rehydrate))
         const ctx = rehydrate(dehydratedOpStream.ctx || {})
 
-        console.log(`Rehydrated chain\n${JSON.stringify(chain, null, 2)}`)
-
         return new BasicOperationStream(chain, ctx)
     }
     throw new Error('Stream must be represented as array')
