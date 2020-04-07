@@ -1,39 +1,60 @@
 import {OperationStream} from "../../execution/OperationStream";
-import {bindCallback, from, fromEvent, Observable, NEVER} from "rxjs";
+import {BehaviorSubject, fromEvent, NEVER, Observable} from "rxjs";
 import {ID_DIGEST, IS_BROWSER} from "../../index";
-import {flatMap, filter} from "rxjs/operators";
+import {first, flatMap} from "rxjs/operators";
 
 export default class NetworkStream {
-    private socket: Promise<SocketIOClient.Socket | void> = Promise.resolve();
+    private socket: BehaviorSubject<SocketIOClient.Socket | null> =
+        new BehaviorSubject<SocketIOClient.Socket | null>(null);
+    private socketio: SocketIOClientStatic | null = null;
 
     constructor(readonly host: string, readonly protocol: string, readonly port?: any, readonly path?: string) {
     }
 
-    connect() {
+    async connect() {
         if (IS_BROWSER) {
-            const port = this.port ? `:${this.port}` : ''
-            const url = `${this.protocol}//${this.host}${port}`;
-            console.log(`NetworkStream on ${url} ${this.path}`)
-            this.socket = import('socket.io-client').then(({default: io}) =>
-                io(url, {transports: ['websocket'], path: this.path})
-            )
+
+            console.debug('NetworkStream is connecting...');
+
+            this.socketio = (await import('socket.io-client').then()).default;
+            this.openSocket();
+
+            const _t = this;
+            window.addEventListener('beforeunload', function () {
+                console.debug('Closing socket in `beforeunload`');
+                _t.socket.toPromise().then(_ => _.close());
+            });
         }
+    }
+
+    private openSocket() {
+        const port = this.port ? `:${this.port}` : '';
+        const url = `${this.protocol}//${this.host}${port}`;
+        console.log(`NetworkStream opened socket on ${url} @ ${this.path}`);
+
+        if (!this.socketio) throw new Error('Failed to load socketio client lib');
+
+        this.socket.next(this.socketio(url, {transports: ['websocket'], path: this.path}))
     }
 
     requestStream<Out>(opStream: OperationStream<void, Out, never>): Observable<Out> {
         // todo make sure to ack
-        console.debug('Request to server is waiting to be subscibed')
+        console.debug('Request to server is waiting to be subscribed');
 
-        if (!IS_BROWSER) return NEVER
+        if (!IS_BROWSER) return NEVER;
 
-        return from(this.socket).pipe(
-            filter(s => !!s),
+        return this.socket.pipe(
+            first(s => {
+                console.debug('NetworkStream attempting to use socket', s);
+                return !!s
+            }),
             flatMap(_socket => {
+                console.debug('.');
                 const dehydratedStream = opStream.serialize();
-                const socket = _socket as SocketIOClient.Socket
+                const socket = _socket as SocketIOClient.Socket;
                 return ID_DIGEST(dehydratedStream).then(opId => {
-                    console.debug('Reqested network stream has id:', opId)
-                    console.debug('Dehydrated stream:', dehydratedStream)
+                    console.debug('Reqested network stream has id:', opId);
+                    console.debug('Dehydrated stream:', dehydratedStream);
                     return {opId, socket, dehydratedStream}
                 })
             }),
