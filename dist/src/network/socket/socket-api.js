@@ -3,18 +3,22 @@ import { NEVER } from "rxjs";
 import { tap } from "rxjs/operators";
 import { ID_DIGEST } from "../../index";
 import { subscribeWithTracking, unsubscribleAll } from "./tracking";
-export default async function startStreamingServer() {
+export default async function startStreamingServer(key, cert) {
     console.log('Starting streaming server');
     const express = await import("express").then(i => i.default);
-    const http = await import("http").then(i => i.default);
+    const https = await import("https").then(i => i.default);
     const socketio = await import('socket.io').then(i => i.default);
     // @ts-ignore
     const cors = await import('cors').then(i => i.default);
+    // const fs = await import('fs').then(i => i.default)
     const app = express();
     app.use(cors({
         origin: true
     }));
-    const server = http.createServer(app);
+    const server = https.createServer({
+        key,
+        cert
+    }, app);
     const io = socketio(server, { serveClient: false, transports: ['websocket'] });
     io.on('connection', (socket) => {
         console.debug(`User connected: ${socket.id}`);

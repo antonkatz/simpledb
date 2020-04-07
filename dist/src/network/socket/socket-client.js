@@ -14,7 +14,7 @@ export default class NetworkStream {
             const port = this.port ? `:${this.port}` : '';
             const url = `${this.protocol}//${this.host}${port}`;
             console.log(`NetworkStream on ${url} ${this.path}`);
-            this.socket = import('socket.io-client').then(({ default: io }) => io(url, { transports: ['websocket'] }));
+            this.socket = import('socket.io-client').then(({ default: io }) => io(url, { transports: ['websocket'], path: this.path }));
         }
     }
     requestStream(opStream) {
