@@ -34,9 +34,9 @@ export function bytesToBase64(bytes) {
     }
     return result;
 }
-const utf8encoder = new TextEncoder();
 // All solutions at MDN only provide a way to encode a native JS string to UTF-16 base64 string.
 // Here, you can apply any encoding supported by TextEncoder.
 function base64utf8encode(str) {
+    const utf8encoder = new TextEncoder();
     return bytesToBase64(utf8encoder.encode(str));
 }

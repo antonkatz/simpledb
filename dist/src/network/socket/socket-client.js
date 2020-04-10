@@ -18,7 +18,7 @@ export default class NetworkStream {
             const _t = this;
             window.addEventListener('beforeunload', function () {
                 console.debug('Closing socket in `beforeunload`');
-                _t.socket.toPromise().then(_ => _.close());
+                _t.socket.toPromise().then(_ => _ && _.close());
             });
         }
     }

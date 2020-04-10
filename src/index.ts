@@ -32,6 +32,8 @@ export let ID_DIGEST: (what: string) => PromiseLike<string>;
 // @ts-ignore
 export const IS_BROWSER = typeof process === 'undefined' || process.type === 'renderer' || process.browser === true || process.__nwjs
 
+console.log("IS_BROWSER", IS_BROWSER)
+
 if (IS_BROWSER) {
     console.warn('Empty DB_ADAPTER')
     // @ts-ignore
