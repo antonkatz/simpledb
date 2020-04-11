@@ -6,11 +6,12 @@ import {registerTable} from "./tableRegistry"
 import {globalBasePath} from "./globalBasePath"
 export {globalBasePath}
 
-export type {TableRecord} from './Table'
+export type {TableRecord, TableStreamEntry} from './Table'
 
 export {HeadOp} from "./operations/headOps"
 export {TableGetOp, TablePutOp, TableFilterNotExists, TableGetForUpdate} from "./operations/tableOps"
 export {TrackMaxIdOp, WithIdAsTableKeyOp} from "./operations/idOps"
+export {UpdateRecordOp} from "./operations/abstractOps"
 
 export {fetchSimpleDb} from './network/http/http-client'
 export {default as startStreamingServer} from './network/socket/socket-api'

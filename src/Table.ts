@@ -4,7 +4,8 @@ import {filter, map} from "rxjs/operators"
 import {Codec, StringCodec} from "./index"
 import {AbstractIterator} from "abstract-leveldown"
 
-type TableStreamEntry<V> = { key: string, value: V, type: 'del' | 'put', doneResolver: (k: string) => void }
+type _TableStreamEntry<V> = { key: string, type: string, doneResolver: (k: string) => void }
+export type TableStreamEntry<V> = (_TableStreamEntry<V> & {value: V, type: 'put'}) | (_TableStreamEntry<V> & {type: 'del'})
 
 export type TableRecord<V> = {key: string, value: V}
 
@@ -20,7 +21,7 @@ export class Table<V> {
 
     private onEntry(entry: TableStreamEntry<V>): Promise<string> {
         if (entry.type === 'del') {
-            const opRes = this.db.then(db => db.del(entry.key, entry.value))
+            const opRes = this.db.then(db => db.del(entry.key))
             return Promise.resolve(entry.key)
         } else if (entry.type === "put") {
             const opRes = this.db.then(db =>
@@ -30,6 +31,8 @@ export class Table<V> {
 
         throw new Error('More operation types than accounted for in TableApi')
     }
+
+    getStream = () => this.subject.asObservable()
 
     put = (key: string, value: V) => {
         return new Promise<string>((doneResolver: (k: string) => void) => {

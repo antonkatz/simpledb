@@ -7,6 +7,7 @@ export class Table {
         this.db = db;
         this.codec = codec;
         this.subject = new Subject();
+        this.getStream = () => this.subject.asObservable();
         this.put = (key, value) => {
             return new Promise((doneResolver) => {
                 // console.debug('Putting', key, value)
@@ -65,7 +66,7 @@ export class Table {
     }
     onEntry(entry) {
         if (entry.type === 'del') {
-            const opRes = this.db.then(db => db.del(entry.key, entry.value));
+            const opRes = this.db.then(db => db.del(entry.key));
             return Promise.resolve(entry.key);
         }
         else if (entry.type === "put") {
