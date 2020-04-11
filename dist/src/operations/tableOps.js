@@ -12,7 +12,7 @@ class TableGetOp extends Operation_1.BasicOperation {
         return true;
     }
     _operation(ctx, inObs) {
-        console.log(`TableGetOp ${JSON.stringify(ctx)}`);
+        // console.log(`TableGetOp ${JSON.stringify(ctx)}`)
         return inObs.pipe(operators_1.flatMap(key => ctx.table.get(key)));
     }
 }
@@ -27,7 +27,7 @@ class TableGetFirstOp extends Operation_1.BasicOperation {
         return true;
     }
     _operation(ctx, inObs) {
-        console.log(`TableGetFirstOp ${JSON.stringify(ctx)}`);
+        // console.log(`TableGetFirstOp ${JSON.stringify(ctx)}`)
         return inObs.pipe(operators_1.flatMap(key => ctx.table.get(key)), operators_1.first());
     }
 }
@@ -42,12 +42,12 @@ class TableGetForUpdate extends Operation_1.BasicOperation {
         return true;
     }
     _operation(ctx, inObs) {
-        console.log(`TableGetForUpdate ${JSON.stringify(ctx)}`);
+        // console.log(`TableGetForUpdate ${JSON.stringify(ctx)}`)
         return inObs.pipe(operators_1.flatMap(key => ctx.table.get(key).pipe(
         // making sure is not empty and then reconstructing the record
         operators_1.filter(v => !!v), operators_1.map(v => {
             const value = v;
-            console.debug(`Got for update ${JSON.stringify(v)}`);
+            // console.debug(`Got for update ${JSON.stringify(v)}`)
             return { key, value };
         }))), operators_1.first());
     }
@@ -64,7 +64,7 @@ class TablePutOp extends Operation_1.BasicOperation {
     }
     _operation(ctx, inObs) {
         return inObs.pipe(operators_1.flatMap(kv => {
-            console.log(`Putting:\n${JSON.stringify(kv.value, null, 2)}`);
+            // console.log(`Putting:\n${JSON.stringify(kv.value, null, 2)}`)
             return ctx.table.put(kv.key, kv.value);
         }));
     }

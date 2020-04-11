@@ -43,14 +43,15 @@ export default async function startStreamingServer(key: Buffer, cert: Buffer) {
 }
 
 async function onStreamRequest(socket: any, dehydratedStream: string) {
-    console.debug(`Server got dehydrated: ${dehydratedStream}`)
+    // console.debug(`Server got dehydrated: ${dehydratedStream}`)
 
     const opId = await ID_DIGEST(dehydratedStream)
     const opStream = rehydrateOpStreamFromJson(dehydratedStream);
 
     const obs = opStream.run(NEVER, {}).pipe(
         tap(v => {
-            console.debug(`Server tapped: ${JSON.stringify(v)}`)
+            // console.debug(`Server tapped: ${JSON.stringify(v)}`)
+            console.debug(`Responded to '${socket.id}' -- '${opId}'`)
             socket.emit(opId, v)
         })
     )

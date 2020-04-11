@@ -39,11 +39,12 @@ async function startStreamingServer(key, cert) {
 }
 exports.default = startStreamingServer;
 async function onStreamRequest(socket, dehydratedStream) {
-    console.debug(`Server got dehydrated: ${dehydratedStream}`);
+    // console.debug(`Server got dehydrated: ${dehydratedStream}`)
     const opId = await index_1.ID_DIGEST(dehydratedStream);
     const opStream = serialization_1.rehydrateOpStreamFromJson(dehydratedStream);
     const obs = opStream.run(rxjs_1.NEVER, {}).pipe(operators_1.tap(v => {
-        console.debug(`Server tapped: ${JSON.stringify(v)}`);
+        // console.debug(`Server tapped: ${JSON.stringify(v)}`)
+        console.debug(`Responded to '${socket.id}' -- '${opId}'`);
         socket.emit(opId, v);
     }));
     tracking_1.subscribeWithTracking(socket.id, opId, obs);

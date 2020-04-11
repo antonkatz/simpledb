@@ -34,7 +34,8 @@ export default class NetworkStream {
 
         if (!this.socketio) throw new Error('Failed to load socketio client lib');
 
-        this.socket.next(this.socketio(url, {transports: ['websocket'], path: this.path}))
+        const s = this.socketio(url, {transports: ['websocket'], path: this.path})
+        this.socket.next(s)
     }
 
     requestStream<Out>(opStream: OperationStream<void, Out, never>): Observable<Out> {
@@ -45,7 +46,7 @@ export default class NetworkStream {
 
         return this.socket.pipe(
             first(s => {
-                console.debug('NetworkStream attempting to use socket', s);
+                console.debug('NetworkStream attempting to use socket', s && s.id);
                 return !!s
             }),
             flatMap(_socket => {

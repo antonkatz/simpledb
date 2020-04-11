@@ -14,7 +14,7 @@ export class TableGetOp<V>
 
     _operation(ctx: { table: Table<V> }, inObs: Observable<string>):
         Observable<V | undefined> {
-        console.log(`TableGetOp ${JSON.stringify(ctx)}`)
+        // console.log(`TableGetOp ${JSON.stringify(ctx)}`)
 
         return inObs.pipe(
             flatMap(key => ctx.table.get(key))
@@ -34,7 +34,7 @@ export class TableGetFirstOp<V>
 
     _operation(ctx: { table: Table<V> }, inObs: Observable<string>):
         Observable<V | undefined> {
-        console.log(`TableGetFirstOp ${JSON.stringify(ctx)}`)
+        // console.log(`TableGetFirstOp ${JSON.stringify(ctx)}`)
 
         return inObs.pipe(
             flatMap(key => ctx.table.get(key)),
@@ -55,7 +55,7 @@ export class TableGetForUpdate<V>
 
     _operation(ctx: { table: Table<V> }, inObs: Observable<string>):
         Observable<TableRecord<V>> {
-        console.log(`TableGetForUpdate ${JSON.stringify(ctx)}`)
+        // console.log(`TableGetForUpdate ${JSON.stringify(ctx)}`)
 
         return inObs.pipe(
             flatMap(key => ctx.table.get(key).pipe(
@@ -63,7 +63,7 @@ export class TableGetForUpdate<V>
                 filter(v => !!v),
                 map(v => {
                     const value = v as V
-                    console.debug(`Got for update ${JSON.stringify(v)}`)
+                    // console.debug(`Got for update ${JSON.stringify(v)}`)
                     return {key, value}
                 })
             )),
@@ -91,7 +91,7 @@ export class TablePutOp<V>
         Observable<string> {
         return inObs.pipe(
             flatMap(kv => {
-                console.log(`Putting:\n${JSON.stringify(kv.value, null, 2)}`)
+                // console.log(`Putting:\n${JSON.stringify(kv.value, null, 2)}`)
                 return ctx.table.put(kv.key, kv.value)
             })
         )

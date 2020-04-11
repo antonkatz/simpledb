@@ -37,7 +37,8 @@ class NetworkStream {
         console.log(`NetworkStream opened socket on ${url} @ ${this.path}`);
         if (!this.socketio)
             throw new Error('Failed to load socketio client lib');
-        this.socket.next(this.socketio(url, { transports: ['websocket'], path: this.path }));
+        const s = this.socketio(url, { transports: ['websocket'], path: this.path });
+        this.socket.next(s);
     }
     requestStream(opStream) {
         // todo make sure to ack
@@ -45,7 +46,7 @@ class NetworkStream {
         if (!index_1.IS_BROWSER)
             return rxjs_1.NEVER;
         return this.socket.pipe(operators_1.first(s => {
-            console.debug('NetworkStream attempting to use socket', s);
+            console.debug('NetworkStream attempting to use socket', s && s.id);
             return !!s;
         }), operators_1.flatMap(_socket => {
             console.debug('.');
