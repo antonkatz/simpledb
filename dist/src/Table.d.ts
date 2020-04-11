@@ -6,10 +6,11 @@ declare type _TableStreamEntry<V> = {
     type: string;
     doneResolver: (k: string) => void;
 };
-export declare type TableStreamEntry<V> = (_TableStreamEntry<V> & {
+export declare type TablePutEntry<V> = (_TableStreamEntry<V> & {
     value: V;
     type: 'put';
-}) | (_TableStreamEntry<V> & {
+});
+export declare type TableStreamEntry<V> = TablePutEntry<V> | (_TableStreamEntry<V> & {
     type: 'del';
 });
 export declare type TableRecord<V> = {

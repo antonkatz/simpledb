@@ -2,7 +2,7 @@ import { AbstractLevelDOWNConstructor } from "abstract-leveldown";
 import { Table } from "./Table";
 import { globalBasePath } from "./globalBasePath";
 export { globalBasePath };
-export type { TableRecord, TableStreamEntry } from './Table';
+export type { TableRecord, TableStreamEntry, TablePutEntry } from './Table';
 export { HeadOp } from "./operations/headOps";
 export { TableGetOp, TablePutOp, TableFilterNotExists, TableGetForUpdate } from "./operations/tableOps";
 export { TrackMaxIdOp, WithIdAsTableKeyOp } from "./operations/idOps";

@@ -8,4 +8,5 @@ export function getRegisteredOperation(opName) {
 export function registerOperation(op) {
     console.log('registering', op.name);
     operationRegistry = operationRegistry.set(op.name, op);
+    return new op();
 }

@@ -5,7 +5,8 @@ import {Codec, StringCodec} from "./index"
 import {AbstractIterator} from "abstract-leveldown"
 
 type _TableStreamEntry<V> = { key: string, type: string, doneResolver: (k: string) => void }
-export type TableStreamEntry<V> = (_TableStreamEntry<V> & {value: V, type: 'put'}) | (_TableStreamEntry<V> & {type: 'del'})
+export type TablePutEntry<V> = (_TableStreamEntry<V> & {value: V, type: 'put'})
+export type TableStreamEntry<V> = TablePutEntry<V> | (_TableStreamEntry<V> & {type: 'del'})
 
 export type TableRecord<V> = {key: string, value: V}
 
