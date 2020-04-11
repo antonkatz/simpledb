@@ -1,11 +1,13 @@
-import { List } from "immutable";
-import { runOp } from "./runOp";
-import { SecurityError } from "../Security";
-export const OperationStreamSymbol = Symbol();
-export class BasicOperationStream {
-    constructor(chain = List(), _defaultContext) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const immutable_1 = require("immutable");
+const runOp_1 = require("./runOp");
+const Security_1 = require("../Security");
+exports.OperationStreamSymbol = Symbol();
+class BasicOperationStream {
+    constructor(chain = immutable_1.List(), _defaultContext) {
         this.chain = chain;
-        this.symbol = OperationStreamSymbol;
+        this.symbol = exports.OperationStreamSymbol;
         this.innerContext = {};
         if (_defaultContext) {
             this.innerContext = _defaultContext;
@@ -23,7 +25,7 @@ export class BasicOperationStream {
         const first = this.chain.first();
         if (first) {
             return this.chain.reduce((reduction, op) => {
-                const nextReduction = runOp(op, fullCtx, reduction || input);
+                const nextReduction = runOp_1.runOp(op, fullCtx, reduction || input);
                 if (!nextReduction) {
                     throw new Error(`Operation Stream failed at ${op.constructor.name || op.getOpName()}`);
                 }
@@ -36,7 +38,7 @@ export class BasicOperationStream {
         this.chain.forEach(op => {
             const c = op.security(ctx);
             if (!c)
-                throw new SecurityError(`OperationStream: Security conditions failed in ${op.getOpName()} ` +
+                throw new Security_1.SecurityError(`OperationStream: Security conditions failed in ${op.getOpName()} ` +
                     `with additional context ${JSON.stringify(ctx)}`);
         });
     }
@@ -54,8 +56,10 @@ export class BasicOperationStream {
         return JSON.stringify(obj);
     }
 }
-export function buildOpStream(op, defaultContext) {
+exports.BasicOperationStream = BasicOperationStream;
+function buildOpStream(op, defaultContext) {
     if (!defaultContext)
-        return new BasicOperationStream(List([op]));
-    return new BasicOperationStream(List([op]), defaultContext);
+        return new BasicOperationStream(immutable_1.List([op]));
+    return new BasicOperationStream(immutable_1.List([op]), defaultContext);
 }
+exports.buildOpStream = buildOpStream;

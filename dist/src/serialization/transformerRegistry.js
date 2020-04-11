@@ -1,7 +1,9 @@
-import { objToOp } from "./operationTransformer";
-import { objToTable } from "./tableTransformer";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const operationTransformer_1 = require("./operationTransformer");
+const tableTransformer_1 = require("./tableTransformer");
 const transformerRegistry = [
-    objToTable,
-    objToOp,
+    tableTransformer_1.objToTable,
+    operationTransformer_1.objToOp,
 ];
-export default transformerRegistry;
+exports.default = transformerRegistry;

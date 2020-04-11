@@ -1,4 +1,6 @@
-export async function fetchSimpleDb(opStream) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+async function fetchSimpleDb(opStream) {
     const url = new URL('api/simpledb', window.location.toString());
     const headers = new Headers();
     headers.append("Content-Type", "application/json");
@@ -9,3 +11,4 @@ export async function fetchSimpleDb(opStream) {
     });
     return resp.json();
 }
+exports.fetchSimpleDb = fetchSimpleDb;

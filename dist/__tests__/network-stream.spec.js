@@ -1,3 +1,5 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 // describe("Streaming network operations", () => {
 //     const server = startStreamingServer()
 //     const client = new NetworkStream('localhost', 'http:', 3001)

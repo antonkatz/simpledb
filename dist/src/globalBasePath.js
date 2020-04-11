@@ -1,4 +1,6 @@
-export const globalBasePath = new class {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.globalBasePath = new class {
     constructor() {
         this.res = () => { };
         this._path = new Promise(_res => this.res = _res);

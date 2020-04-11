@@ -1,7 +1,9 @@
-import { BasicOperation } from "./Operation";
-import { filter, first, flatMap, map, tap } from "rxjs/operators";
-import { registerOperation } from "./operationRegistry";
-export class TableGetOp extends BasicOperation {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const Operation_1 = require("./Operation");
+const operators_1 = require("rxjs/operators");
+const operationRegistry_1 = require("./operationRegistry");
+class TableGetOp extends Operation_1.BasicOperation {
     constructor() {
         super(...arguments);
         this.name = "TableGetOp";
@@ -11,11 +13,12 @@ export class TableGetOp extends BasicOperation {
     }
     _operation(ctx, inObs) {
         console.log(`TableGetOp ${JSON.stringify(ctx)}`);
-        return inObs.pipe(flatMap(key => ctx.table.get(key)));
+        return inObs.pipe(operators_1.flatMap(key => ctx.table.get(key)));
     }
 }
-registerOperation(TableGetOp);
-export class TableGetFirstOp extends BasicOperation {
+exports.TableGetOp = TableGetOp;
+operationRegistry_1.registerOperation(TableGetOp);
+class TableGetFirstOp extends Operation_1.BasicOperation {
     constructor() {
         super(...arguments);
         this.name = "TableGetFirstOp";
@@ -25,11 +28,12 @@ export class TableGetFirstOp extends BasicOperation {
     }
     _operation(ctx, inObs) {
         console.log(`TableGetFirstOp ${JSON.stringify(ctx)}`);
-        return inObs.pipe(flatMap(key => ctx.table.get(key)), first());
+        return inObs.pipe(operators_1.flatMap(key => ctx.table.get(key)), operators_1.first());
     }
 }
-registerOperation(TableGetFirstOp);
-export class TableGetForUpdate extends BasicOperation {
+exports.TableGetFirstOp = TableGetFirstOp;
+operationRegistry_1.registerOperation(TableGetFirstOp);
+class TableGetForUpdate extends Operation_1.BasicOperation {
     constructor() {
         super(...arguments);
         this.name = "TableGetForUpdate";
@@ -39,17 +43,18 @@ export class TableGetForUpdate extends BasicOperation {
     }
     _operation(ctx, inObs) {
         console.log(`TableGetForUpdate ${JSON.stringify(ctx)}`);
-        return inObs.pipe(flatMap(key => ctx.table.get(key).pipe(
+        return inObs.pipe(operators_1.flatMap(key => ctx.table.get(key).pipe(
         // making sure is not empty and then reconstructing the record
-        filter(v => !!v), map(v => {
+        operators_1.filter(v => !!v), operators_1.map(v => {
             const value = v;
             console.debug(`Got for update ${JSON.stringify(v)}`);
             return { key, value };
-        }))), first());
+        }))), operators_1.first());
     }
 }
-registerOperation(TableGetForUpdate);
-export class TablePutOp extends BasicOperation {
+exports.TableGetForUpdate = TableGetForUpdate;
+operationRegistry_1.registerOperation(TableGetForUpdate);
+class TablePutOp extends Operation_1.BasicOperation {
     constructor() {
         super();
         this.name = "TablePutOp";
@@ -58,14 +63,15 @@ export class TablePutOp extends BasicOperation {
         return true;
     }
     _operation(ctx, inObs) {
-        return inObs.pipe(flatMap(kv => {
+        return inObs.pipe(operators_1.flatMap(kv => {
             console.log(`Putting:\n${JSON.stringify(kv.value, null, 2)}`);
             return ctx.table.put(kv.key, kv.value);
         }));
     }
 }
-registerOperation(TablePutOp);
-export class TableFilterNotExists extends BasicOperation {
+exports.TablePutOp = TablePutOp;
+operationRegistry_1.registerOperation(TablePutOp);
+class TableFilterNotExists extends Operation_1.BasicOperation {
     constructor() {
         super();
         this.name = "TableFilterNotExists";
@@ -74,13 +80,14 @@ export class TableFilterNotExists extends BasicOperation {
         return true;
     }
     _operation(ctx, inObs) {
-        return inObs.pipe(flatMap(kv => {
+        return inObs.pipe(operators_1.flatMap(kv => {
             // console.log('filtering on ' + JSON.stringify(kv))
-            return ctx.table.get(kv.key).pipe(map(existing => [!!existing, kv]), first());
-        }), tap(we => console.log(`Filter res ${this.getOpName()} : ${we}`)), filter(withExisting => !withExisting[0]), map(withExisting => withExisting[1]));
+            return ctx.table.get(kv.key).pipe(operators_1.map(existing => [!!existing, kv]), operators_1.first());
+        }), operators_1.tap(we => console.log(`Filter res ${this.getOpName()} : ${we}`)), operators_1.filter(withExisting => !withExisting[0]), operators_1.map(withExisting => withExisting[1]));
     }
 }
-registerOperation(TableFilterNotExists);
+exports.TableFilterNotExists = TableFilterNotExists;
+operationRegistry_1.registerOperation(TableFilterNotExists);
 // export class UpdateRecordByActionOp<V, Z extends TableRecord<V>, A> extends BasicOperation<Z, Z, {action: A}> {
 //     protected name: string = 'UpdateRecordOp';
 //

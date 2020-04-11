@@ -1,20 +1,27 @@
-import { List } from "immutable";
-import { BasicOperationStream } from "../execution/OperationStream";
-import transformerRegistry from "./transformerRegistry";
-export function rehydrateOpStreamFromJson(json) {
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const immutable_1 = require("immutable");
+const OperationStream_1 = require("../execution/OperationStream");
+const transformerRegistry_1 = __importDefault(require("./transformerRegistry"));
+function rehydrateOpStreamFromJson(json) {
     return rehydrateOpStream(JSON.parse(json));
 }
-export function rehydrateOpStream(dehydratedOpStream) {
+exports.rehydrateOpStreamFromJson = rehydrateOpStreamFromJson;
+function rehydrateOpStream(dehydratedOpStream) {
     if (Array.isArray(dehydratedOpStream.chain)) {
-        const chain = List(dehydratedOpStream.chain.map(rehydrate));
+        const chain = immutable_1.List(dehydratedOpStream.chain.map(rehydrate));
         const ctx = rehydrate(dehydratedOpStream.ctx || {});
-        return new BasicOperationStream(chain, ctx);
+        return new OperationStream_1.BasicOperationStream(chain, ctx);
     }
     throw new Error('Stream must be represented as array');
 }
-export function rehydrate(raw) {
+exports.rehydrateOpStream = rehydrateOpStream;
+function rehydrate(raw) {
     if (raw && typeof raw === 'object') {
-        for (const trans of transformerRegistry) {
+        for (const trans of transformerRegistry_1.default) {
             const res = trans(raw);
             if (res) {
                 return res;
@@ -31,3 +38,4 @@ export function rehydrate(raw) {
         return raw;
     }
 }
+exports.rehydrate = rehydrate;

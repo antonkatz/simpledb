@@ -1,19 +1,28 @@
-import { BehaviorSubject, fromEvent, NEVER } from "rxjs";
-import { ID_DIGEST, IS_BROWSER } from "../../index";
-import { first, flatMap } from "rxjs/operators";
-export default class NetworkStream {
+"use strict";
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const rxjs_1 = require("rxjs");
+const index_1 = require("../../index");
+const operators_1 = require("rxjs/operators");
+class NetworkStream {
     constructor(host, protocol, port, path) {
         this.host = host;
         this.protocol = protocol;
         this.port = port;
         this.path = path;
-        this.socket = new BehaviorSubject(null);
+        this.socket = new rxjs_1.BehaviorSubject(null);
         this.socketio = null;
     }
     async connect() {
-        if (IS_BROWSER) {
+        if (index_1.IS_BROWSER) {
             console.debug('NetworkStream is connecting...');
-            this.socketio = (await import('socket.io-client').then()).default;
+            this.socketio = (await Promise.resolve().then(() => __importStar(require('socket.io-client'))).then()).default;
             this.openSocket();
             const _t = this;
             window.addEventListener('beforeunload', function () {
@@ -33,23 +42,24 @@ export default class NetworkStream {
     requestStream(opStream) {
         // todo make sure to ack
         console.debug('Request to server is waiting to be subscribed');
-        if (!IS_BROWSER)
-            return NEVER;
-        return this.socket.pipe(first(s => {
+        if (!index_1.IS_BROWSER)
+            return rxjs_1.NEVER;
+        return this.socket.pipe(operators_1.first(s => {
             console.debug('NetworkStream attempting to use socket', s);
             return !!s;
-        }), flatMap(_socket => {
+        }), operators_1.flatMap(_socket => {
             console.debug('.');
             const dehydratedStream = opStream.serialize();
             const socket = _socket;
-            return ID_DIGEST(dehydratedStream).then(opId => {
+            return index_1.ID_DIGEST(dehydratedStream).then(opId => {
                 console.debug('Reqested network stream has id:', opId);
                 console.debug('Dehydrated stream:', dehydratedStream);
                 return { opId, socket, dehydratedStream };
             });
-        }), flatMap(({ opId, socket, dehydratedStream }) => {
+        }), operators_1.flatMap(({ opId, socket, dehydratedStream }) => {
             socket.emit('streamRequest', dehydratedStream);
-            return fromEvent(socket, opId);
+            return rxjs_1.fromEvent(socket, opId);
         }));
     }
 }
+exports.default = NetworkStream;

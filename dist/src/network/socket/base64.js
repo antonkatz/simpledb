@@ -1,3 +1,5 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const base64abc = (() => {
     let abc = [], A = "A".charCodeAt(0), a = "a".charCodeAt(0), n = "0".charCodeAt(0);
     for (let i = 0; i < 26; ++i) {
@@ -13,7 +15,7 @@ const base64abc = (() => {
     abc.push("/");
     return abc;
 })();
-export function bytesToBase64(bytes) {
+function bytesToBase64(bytes) {
     let result = '', i, l = bytes.length;
     for (i = 2; i < l; i += 3) {
         result += base64abc[bytes[i - 2] >> 2];
@@ -34,6 +36,7 @@ export function bytesToBase64(bytes) {
     }
     return result;
 }
+exports.bytesToBase64 = bytesToBase64;
 // All solutions at MDN only provide a way to encode a native JS string to UTF-16 base64 string.
 // Here, you can apply any encoding supported by TextEncoder.
 function base64utf8encode(str) {

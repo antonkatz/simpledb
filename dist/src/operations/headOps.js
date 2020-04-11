@@ -1,7 +1,9 @@
-import { BasicOperation } from "./Operation";
-import { from } from "rxjs";
-import { registerOperation } from "./operationRegistry";
-export class HeadOp extends BasicOperation {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const Operation_1 = require("./Operation");
+const rxjs_1 = require("rxjs");
+const operationRegistry_1 = require("./operationRegistry");
+class HeadOp extends Operation_1.BasicOperation {
     constructor() {
         super(...arguments);
         this.name = "HeadOp";
@@ -12,7 +14,8 @@ export class HeadOp extends BasicOperation {
     }
     _operation(ctx) {
         console.log(`${this.name} executed with context ${JSON.stringify(ctx)}`);
-        return from([ctx.head]);
+        return rxjs_1.from([ctx.head]);
     }
 }
-registerOperation(HeadOp);
+exports.HeadOp = HeadOp;
+operationRegistry_1.registerOperation(HeadOp);

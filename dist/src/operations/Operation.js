@@ -1,9 +1,11 @@
-import { BasicOperationStream, OperationStreamSymbol } from "../execution/OperationStream";
-import { List } from "immutable";
-export const OperationSymbol = Symbol();
-export class BasicOperation {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const OperationStream_1 = require("../execution/OperationStream");
+const immutable_1 = require("immutable");
+exports.OperationSymbol = Symbol();
+class BasicOperation {
     constructor() {
-        this.symbol = OperationSymbol;
+        this.symbol = exports.OperationSymbol;
         this.context = {};
     }
     getOpName() {
@@ -37,13 +39,13 @@ export class BasicOperation {
         return this._security(fullCtx);
     }
     chain(opOrStream) {
-        if (opOrStream.symbol === OperationSymbol) {
+        if (opOrStream.symbol === exports.OperationSymbol) {
             const op = opOrStream;
-            return new BasicOperationStream(List([this, op]));
+            return new OperationStream_1.BasicOperationStream(immutable_1.List([this, op]));
         }
-        else if (opOrStream.symbol === OperationStreamSymbol) {
+        else if (opOrStream.symbol === OperationStream_1.OperationStreamSymbol) {
             const stream = opOrStream;
-            const thisStream = new BasicOperationStream(List([this]));
+            const thisStream = new OperationStream_1.BasicOperationStream(immutable_1.List([this]));
             return thisStream.join(stream);
         }
         throw new Error('An operation can only be chained with another or a stream');
@@ -52,3 +54,4 @@ export class BasicOperation {
         return { opName: this.getOpName(), ctx: this.context };
     }
 }
+exports.BasicOperation = BasicOperation;

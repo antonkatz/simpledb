@@ -1,12 +1,14 @@
-import { concat, Observable, Subject } from "rxjs";
-import { filter, map } from "rxjs/operators";
-import { StringCodec } from "./index";
-export class Table {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const rxjs_1 = require("rxjs");
+const operators_1 = require("rxjs/operators");
+const index_1 = require("./index");
+class Table {
     constructor(name, db, codec) {
         this.name = name;
         this.db = db;
         this.codec = codec;
-        this.subject = new Subject();
+        this.subject = new rxjs_1.Subject();
         this.getStream = () => this.subject.asObservable();
         this.put = (key, value) => {
             return new Promise((doneResolver) => {
@@ -23,10 +25,10 @@ export class Table {
                 // console.debug(`Could not get from table ${this.name} on key ${key}; ${e.message}`)
                 return undefined;
             });
-            const updateStream = this.subject.pipe(filter(e => e.key === key), map(mapEntryStreamToEntry));
+            const updateStream = this.subject.pipe(operators_1.filter(e => e.key === key), operators_1.map(mapEntryStreamToEntry));
             // this prevents race conditions, making sure the freshest value is emitted last
             let hasNewValue = false;
-            const pendingState = new Observable(sub => {
+            const pendingState = new rxjs_1.Observable(sub => {
                 updateStream.subscribe(v => {
                     hasNewValue = true;
                     sub.next(v);
@@ -37,7 +39,7 @@ export class Table {
                     sub.complete();
                 });
             });
-            return concat(pendingState, updateStream);
+            return rxjs_1.concat(pendingState, updateStream);
         };
         this.rangeSync = async (fromKey, toKey, limit = 1, reverse = false) => {
             const stream = (await this.db).createReadStream({
@@ -47,7 +49,7 @@ export class Table {
             const p = new Promise(_res => res = _res);
             const result = [];
             stream.on('data', row => {
-                const key = StringCodec.rehydrate(row.key);
+                const key = index_1.StringCodec.rehydrate(row.key);
                 const value = this.codec.rehydrate(row.value);
                 result.push({ key, value });
                 console.log(`rangeSync got row: ${key}\n\t`, JSON.stringify(value));
@@ -79,6 +81,7 @@ export class Table {
         return { resourceType: 'table', name: this.name };
     }
 }
+exports.Table = Table;
 function notifyEnteree(entry, opPromise) {
     opPromise.then(entry.doneResolver);
 }

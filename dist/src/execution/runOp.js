@@ -1,10 +1,13 @@
-import { SecurityError } from "../Security";
-export function runOp(op, additionalCtx, inObs) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const Security_1 = require("../Security");
+function runOp(op, additionalCtx, inObs) {
     if (op.security(additionalCtx)) {
         return op.operation(additionalCtx, inObs);
     }
     else {
-        throw new SecurityError(`Security conditions failed in ${op.getOpName()} with ` +
+        throw new Security_1.SecurityError(`Security conditions failed in ${op.getOpName()} with ` +
             `additional context ${JSON.stringify(additionalCtx)}`);
     }
 }
+exports.runOp = runOp;
