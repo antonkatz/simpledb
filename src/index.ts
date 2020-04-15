@@ -2,7 +2,8 @@ import {isBrowser} from 'browser-or-node'
 
 export {globalBasePath} from "./database/globalBasePath"
 
-export type {TableRecord, TableStreamEntry, TablePutEntry} from './table/Table'
+export type {TableRecord} from './table/Table'
+export * from './table/TableStreamEntry'
 export {buildTable, TableBuilder} from './table/buildTable'
 
 export type {OrEmpty, Operation} from './operations/Operation'
@@ -34,3 +35,5 @@ export const IS_BROWSER = isBrowser;
 console.log("IS_BROWSER", IS_BROWSER);
 
 
+export {TableStreamEntry} from "./table/TableStreamEntry";
+export {TablePutEntry}    from "./table/TableStreamEntry";

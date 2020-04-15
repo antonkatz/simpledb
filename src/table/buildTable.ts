@@ -8,13 +8,13 @@ import {registerTable} from "./tableRegistry";
 import {curry}         from 'lodash/fp'
 
 export type DbApiOptions = {
-    basePath?: string,
     name: string
+    basePath?: string,
 }
 
 /** @deprecated use `buildTable()` instead */
 export const TableBuilder: <V>(options: DbApiOptions, codec?: Codec<V>) => Table<V> = curry(_buildTable)(DB_ADAPTER);
-export const buildTable = TableBuilder;
+export const buildTable: <V>(options: DbApiOptions, codec?: Codec<V>) => Table<V> = curry(_buildTable)(DB_ADAPTER);
 
 function _buildTable<V>(adapter: Promise<AbstractLevelDOWNConstructor>, options: DbApiOptions, codec: Codec<V> = buildJsonCodec()): Table<V> {
     const relPath = options.basePath || './db';
