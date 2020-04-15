@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const Operation_1 = require("./Operation");
 const rxjs_1 = require("rxjs");
 const operationRegistry_1 = require("./operationRegistry");
-class HeadOp extends Operation_1.BasicOperation {
+const BasicOperation_1 = require("./BasicOperation");
+class HeadOp extends BasicOperation_1.BasicOperation {
     constructor() {
         super(...arguments);
         this.name = "HeadOp";

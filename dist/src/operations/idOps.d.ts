@@ -1,6 +1,6 @@
-import { BasicOperation } from "./Operation";
-import { Table } from "../Table";
+import { Table } from "../table/Table";
 import { Observable } from "rxjs";
+import { BasicOperation } from "./BasicOperation";
 export declare const MAX_KEY_METADATA_KEY = "maxKey";
 export declare class TrackMaxIdOp extends BasicOperation<string, string, {
     metadataTable: Table<string>;

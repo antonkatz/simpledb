@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const immutable_1 = require("immutable");
 const runOp_1 = require("./runOp");
-const Security_1 = require("../Security");
+const Security_1 = require("../security/Security");
 exports.OperationStreamSymbol = Symbol();
 class BasicOperationStream {
     constructor(chain = immutable_1.List(), _defaultContext) {

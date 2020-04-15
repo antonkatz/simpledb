@@ -434,6 +434,11 @@
     "@types/connect" "*"
     "@types/node" "*"
 
+"@types/browser-or-node@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@types/browser-or-node/-/browser-or-node-1.2.0.tgz#9c5073b58ffad7d93b5588f1be0c78581b204f9a"
+  integrity sha512-hLn4jvpZ804yQDu71YW7qNQDm045XmODoEOZohkH4jWb23AaPodhVM5qztG+XM54Oqw8X1dA4A7z49iNFGbrxA==
+
 "@types/color-name@^1.1.1":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@types/color-name/-/color-name-1.1.1.tgz#1c1261bbeaa10a8055bbc5d8ab84b7b2afc846a0"
@@ -515,6 +520,11 @@
   dependencies:
     "@types/abstract-leveldown" "*"
     "@types/node" "*"
+
+"@types/lodash@^4.14.149":
+  version "4.14.149"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.149.tgz#1342d63d948c6062838fbf961012f74d4e638440"
+  integrity sha512-ijGqzZt/b7BfzcK9vTrS6MFljQRPn5BFWOx8oE0GYxribu6uV+aA9zZuXI1zc/etK9E8nrgdoF2+LgUw7+9tJQ==
 
 "@types/mime@*":
   version "2.0.1"
@@ -913,6 +923,11 @@ braces@^3.0.1:
   integrity sha512-b8um+L1RzM3WDSzvhm6gIz1yfTbBt6YTlcEKAvsmqCZZFw46z626lVj9j1yEPW33H5H+lBQpZMP1k8l+78Ha0A==
   dependencies:
     fill-range "^7.0.1"
+
+browser-or-node@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/browser-or-node/-/browser-or-node-1.2.1.tgz#cd65172da6a7fd689c7a650d326bd2ad145419a7"
+  integrity sha512-sVIA0cysIED0nbmNOm7sZzKfgN1rpFmrqvLZaFWspaBAftfQcezlC81G6j6U2RJf4Lh66zFxrCeOsvkUXIcPWg==
 
 browser-process-hrtime@^1.0.0:
   version "1.0.0"

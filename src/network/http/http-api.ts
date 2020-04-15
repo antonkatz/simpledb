@@ -1,7 +1,7 @@
 import {NEVER} from "rxjs"
-import {first} from "rxjs/operators"
-import {globalBasePath} from "../../globalBasePath";
-import {SecurityError} from "../../Security";
+import {first}          from "rxjs/operators"
+import {globalBasePath}    from "../../database/globalBasePath";
+import {SecurityError}     from "../../security/Security";
 import {rehydrateOpStream} from "../../serialization";
 
 globalBasePath.setPath('../../');

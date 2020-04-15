@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const Operation_1 = require("./Operation");
 const operators_1 = require("rxjs/operators");
 const operationRegistry_1 = require("./operationRegistry");
-class TableGetOp extends Operation_1.BasicOperation {
+const BasicOperation_1 = require("./BasicOperation");
+class TableGetOp extends BasicOperation_1.BasicOperation {
     constructor() {
         super(...arguments);
         this.name = "TableGetOp";
@@ -18,7 +18,7 @@ class TableGetOp extends Operation_1.BasicOperation {
 }
 exports.TableGetOp = TableGetOp;
 operationRegistry_1.registerOperation(TableGetOp);
-class TableGetFirstOp extends Operation_1.BasicOperation {
+class TableGetFirstOp extends BasicOperation_1.BasicOperation {
     constructor() {
         super(...arguments);
         this.name = "TableGetFirstOp";
@@ -33,7 +33,7 @@ class TableGetFirstOp extends Operation_1.BasicOperation {
 }
 exports.TableGetFirstOp = TableGetFirstOp;
 operationRegistry_1.registerOperation(TableGetFirstOp);
-class TableGetForUpdate extends Operation_1.BasicOperation {
+class TableGetForUpdate extends BasicOperation_1.BasicOperation {
     constructor() {
         super(...arguments);
         this.name = "TableGetForUpdate";
@@ -54,7 +54,7 @@ class TableGetForUpdate extends Operation_1.BasicOperation {
 }
 exports.TableGetForUpdate = TableGetForUpdate;
 operationRegistry_1.registerOperation(TableGetForUpdate);
-class TablePutOp extends Operation_1.BasicOperation {
+class TablePutOp extends BasicOperation_1.BasicOperation {
     constructor() {
         super();
         this.name = "TablePutOp";
@@ -71,7 +71,7 @@ class TablePutOp extends Operation_1.BasicOperation {
 }
 exports.TablePutOp = TablePutOp;
 operationRegistry_1.registerOperation(TablePutOp);
-class TableFilterNotExists extends Operation_1.BasicOperation {
+class TableFilterNotExists extends BasicOperation_1.BasicOperation {
     constructor() {
         super();
         this.name = "TableFilterNotExists";

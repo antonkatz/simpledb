@@ -2,7 +2,7 @@ import {List} from "immutable"
 import {Operation, OrEmpty} from "../operations/Operation"
 import {runOp} from "./runOp"
 import {Observable, Subject} from "rxjs"
-import {SecurityError} from "../Security"
+import {SecurityError}       from "../security/Security"
 
 export const OperationStreamSymbol = Symbol()
 

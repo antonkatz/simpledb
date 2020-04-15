@@ -1,6 +1,6 @@
-import { Table, TableRecord } from "../Table";
-import { BasicOperation } from "./Operation";
+import { Table, TableRecord } from "../table/Table";
 import { Observable } from "rxjs";
+import { BasicOperation } from "./BasicOperation";
 export declare class TableGetOp<V> extends BasicOperation<string, V | undefined, {
     table: Table<V>;
 }> {

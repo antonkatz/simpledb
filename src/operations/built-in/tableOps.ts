@@ -1,8 +1,8 @@
-import {Table, TableRecord} from "../Table"
-import {BasicOperation} from "./Operation"
-import {Observable} from "rxjs"
+import {Table, TableRecord}               from "../../table/Table"
+import {Observable}                       from "rxjs"
 import {filter, first, flatMap, map, tap} from "rxjs/operators"
-import {registerOperation} from "./operationRegistry"
+import {registerOperation}                from "../operationRegistry"
+import {BasicOperation}                   from "../BasicOperation";
 
 export class TableGetOp<V>
     extends BasicOperation<string, V | undefined, { table: Table<V> }> {

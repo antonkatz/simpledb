@@ -1,5 +1,5 @@
-import { BasicOperation } from "./Operation";
 import { Observable } from "rxjs";
+import { BasicOperation } from "./BasicOperation";
 export declare class HeadOp<V> extends BasicOperation<void, V, {
     head: V;
 }> {

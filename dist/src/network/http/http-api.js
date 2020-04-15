@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const rxjs_1 = require("rxjs");
 const operators_1 = require("rxjs/operators");
-const globalBasePath_1 = require("../../globalBasePath");
-const Security_1 = require("../../Security");
+const globalBasePath_1 = require("../../database/globalBasePath");
+const Security_1 = require("../../security/Security");
 const serialization_1 = require("../../serialization");
 globalBasePath_1.globalBasePath.setPath('../../');
 // @ts-ignore

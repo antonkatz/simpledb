@@ -1,8 +1,8 @@
-import {BasicOperation} from "./Operation";
-import {Table} from "../Table";
-import {Observable} from "rxjs";
-import {registerOperation} from "./operationRegistry";
-import {first, map, tap} from "rxjs/operators";
+import {Table}             from "../../table/Table";
+import {Observable}        from "rxjs";
+import {registerOperation} from "../operationRegistry";
+import {first, map, tap}   from "rxjs/operators";
+import {BasicOperation}    from "../BasicOperation";
 
 export const MAX_KEY_METADATA_KEY = 'maxKey'
 

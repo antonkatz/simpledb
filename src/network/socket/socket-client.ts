@@ -1,7 +1,8 @@
-import {OperationStream} from "../../execution/OperationStream";
+import {OperationStream}                               from "../../execution/OperationStream";
 import {BehaviorSubject, fromEvent, NEVER, Observable} from "rxjs";
-import {ID_DIGEST, IS_BROWSER} from "../../index";
-import {first, flatMap} from "rxjs/operators";
+import {IS_BROWSER}                                    from "../../index";
+import {first, flatMap, tap}                           from "rxjs/operators";
+import {ID_DIGEST}                                     from "../IdDigest";
 
 export default class NetworkStream {
     private socket: BehaviorSubject<SocketIOClient.Socket | null> =
@@ -61,7 +62,9 @@ export default class NetworkStream {
             }),
             flatMap(({opId, socket, dehydratedStream}) => {
                 socket.emit('streamRequest', dehydratedStream);
-                return fromEvent(socket, opId) as Observable<Out>
+                return (fromEvent(socket, opId) as Observable<Out>).pipe(
+                    tap((resp) => console.debug('Response on ', opId))
+                )
             })
         )
 

@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const Operation_1 = require("./Operation");
 const operationRegistry_1 = require("./operationRegistry");
 const operators_1 = require("rxjs/operators");
+const BasicOperation_1 = require("./BasicOperation");
 exports.MAX_KEY_METADATA_KEY = 'maxKey';
-class TrackMaxIdOp extends Operation_1.BasicOperation {
+class TrackMaxIdOp extends BasicOperation_1.BasicOperation {
     constructor() {
         super(...arguments);
         this.name = "TrackMaxIdOp";
@@ -27,7 +27,7 @@ class TrackMaxIdOp extends Operation_1.BasicOperation {
 }
 exports.TrackMaxIdOp = TrackMaxIdOp;
 operationRegistry_1.registerOperation(TrackMaxIdOp);
-class WithIdAsTableKeyOp extends Operation_1.BasicOperation {
+class WithIdAsTableKeyOp extends BasicOperation_1.BasicOperation {
     constructor() {
         super(...arguments);
         this.name = "WithIdAsTableKeyOp";

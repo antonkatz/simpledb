@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const Security_1 = require("../Security");
+const Security_1 = require("../security/Security");
 function runOp(op, additionalCtx, inObs) {
     if (op.security(additionalCtx)) {
         return op.operation(additionalCtx, inObs);

@@ -1,8 +1,8 @@
 import {concat, Observable, Subject, from, bindNodeCallback, fromEvent} from "rxjs"
-import {LevelUp} from "levelup"
-import {filter, map} from "rxjs/operators"
-import {Codec, StringCodec} from "./index"
-import {AbstractIterator} from "abstract-leveldown"
+import {LevelUp}                                                        from "levelup"
+import {filter, map}                                                    from "rxjs/operators"
+import {AbstractIterator}                                               from "abstract-leveldown"
+import {Codec, StringCodec}                                             from "./Codec";
 
 type _TableStreamEntry<V> = { key: string, type: string, doneResolver: (k: string) => void }
 export type TablePutEntry<V> = (_TableStreamEntry<V> & {value: V, type: 'put'})

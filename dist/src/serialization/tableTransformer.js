@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const tableRegistry_1 = require("../tableRegistry");
+const tableRegistry_1 = require("../table/tableRegistry");
 function objToTable(obj) {
     if (obj.resourceType === "table" && obj.name) {
         const table = tableRegistry_1.getRegisteredTable(obj.name);

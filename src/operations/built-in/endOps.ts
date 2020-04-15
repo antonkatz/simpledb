@@ -1,7 +1,7 @@
-import {BasicOperation}    from "./Operation";
 import {Observable}        from "rxjs";
 import {first}             from "rxjs/operators";
-import {registerOperation} from "./operationRegistry";
+import {registerOperation} from "../operationRegistry";
+import {BasicOperation}    from "../BasicOperation";
 
 class Once<In> extends BasicOperation<In, In, never> {
     protected name: string = "Once";

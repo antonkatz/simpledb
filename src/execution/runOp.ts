@@ -1,6 +1,6 @@
 import {Observable} from "rxjs"
-import {Operation} from "../operations/Operation"
-import {SecurityError} from "../Security"
+import {Operation}     from "../operations/Operation"
+import {SecurityError} from "../security/Security"
 
 export function runOp<In, Out, Context>(op: Operation<In, Out, Context>, additionalCtx: Context, inObs: Observable<In>):
     Observable<Out> | null {

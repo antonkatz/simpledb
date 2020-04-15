@@ -1,5 +1,6 @@
-import {Map} from "immutable"
-import {BasicOperation, Operation} from "./Operation"
+import {Map}            from "immutable"
+import {Operation}      from "./Operation"
+import {BasicOperation} from "./BasicOperation";
 
 let operationRegistry = Map<string, new () => Operation<any, any, any>>()
 

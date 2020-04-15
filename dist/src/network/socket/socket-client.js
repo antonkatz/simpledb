@@ -10,6 +10,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const rxjs_1 = require("rxjs");
 const index_1 = require("../../index");
 const operators_1 = require("rxjs/operators");
+const IdDigest_1 = require("../IdDigest");
 class NetworkStream {
     constructor(host, protocol, port, path) {
         this.host = host;
@@ -52,14 +53,14 @@ class NetworkStream {
             console.debug('.');
             const dehydratedStream = opStream.serialize();
             const socket = _socket;
-            return index_1.ID_DIGEST(dehydratedStream).then(opId => {
+            return IdDigest_1.ID_DIGEST(dehydratedStream).then(opId => {
                 console.debug('Reqested network stream has id:', opId);
                 console.debug('Dehydrated stream:', dehydratedStream);
                 return { opId, socket, dehydratedStream };
             });
         }), operators_1.flatMap(({ opId, socket, dehydratedStream }) => {
             socket.emit('streamRequest', dehydratedStream);
-            return rxjs_1.fromEvent(socket, opId);
+            return rxjs_1.fromEvent(socket, opId).pipe(operators_1.tap((resp) => console.debug('Response on ', opId)));
         }));
     }
 }

@@ -1,9 +1,9 @@
-import {rehydrateOpStreamFromJson} from "../../serialization";
-import {NEVER} from "rxjs";
-import crypto from 'crypto'
-import {tap} from "rxjs/operators";
-import {ID_DIGEST} from "../../index";
+import {rehydrateOpStreamFromJson}              from "../../serialization";
+import {NEVER}                                  from "rxjs";
+import crypto                                   from 'crypto'
+import {tap}                                    from "rxjs/operators";
 import {subscribeWithTracking, unsubscribleAll} from "./tracking";
+import {ID_DIGEST}                              from "../IdDigest";
 
 
 export default async function startStreamingServer(key: Buffer, cert: Buffer) {

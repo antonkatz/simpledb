@@ -1,6 +1,6 @@
 import { Observable } from "rxjs";
-import { BasicOperation } from "./Operation";
-import { TableRecord } from "../Table";
+import { TableRecord } from "../table/Table";
+import { BasicOperation } from "./BasicOperation";
 export declare abstract class UpdateRecordOp<V, Ctx> extends BasicOperation<TableRecord<V>, TableRecord<V>, Ctx> {
     abstract updateWith(record: V, ctx: Ctx): Observable<Partial<V>>;
     filter(record: V, ctx: Ctx): boolean;

@@ -10,8 +10,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const serialization_1 = require("../../serialization");
 const rxjs_1 = require("rxjs");
 const operators_1 = require("rxjs/operators");
-const index_1 = require("../../index");
 const tracking_1 = require("./tracking");
+const IdDigest_1 = require("../IdDigest");
 async function startStreamingServer(key, cert) {
     console.log('Starting streaming server');
     const express = await Promise.resolve().then(() => __importStar(require("express"))).then(i => i.default);
@@ -40,7 +40,7 @@ async function startStreamingServer(key, cert) {
 exports.default = startStreamingServer;
 async function onStreamRequest(socket, dehydratedStream) {
     // console.debug(`Server got dehydrated: ${dehydratedStream}`)
-    const opId = await index_1.ID_DIGEST(dehydratedStream);
+    const opId = await IdDigest_1.ID_DIGEST(dehydratedStream);
     const opStream = serialization_1.rehydrateOpStreamFromJson(dehydratedStream);
     const obs = opStream.run(rxjs_1.NEVER, {}).pipe(operators_1.tap(v => {
         // console.debug(`Server tapped: ${JSON.stringify(v)}`)

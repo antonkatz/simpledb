@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const operators_1 = require("rxjs/operators");
-const Operation_1 = require("./Operation");
-class UpdateRecordOp extends Operation_1.BasicOperation {
+const BasicOperation_1 = require("./BasicOperation");
+class UpdateRecordOp extends BasicOperation_1.BasicOperation {
     filter(record, ctx) {
         return true;
     }

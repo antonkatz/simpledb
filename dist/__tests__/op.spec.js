@@ -5,11 +5,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const leveldown_1 = __importDefault(require("leveldown"));
-const src_1 = require("../src");
+const buildTable_1 = require("../src/table/buildTable");
 describe('Operations', () => {
     // @ts-ignore
     const adapter = leveldown_1.default;
-    const dbApiBuilder = src_1.DbStringApiBuilder(Promise.resolve(adapter));
+    const dbApiBuilder = buildTable_1.DbStringApiBuilder(Promise.resolve(adapter));
     test.skip('GetKeyValue operation', async (done) => {
         // const db = dbApiBuilder({basePath: './db', name: `test-${Date.now()}-1`}) as Table<string | undefined>
         // await db.put('key', 'value')

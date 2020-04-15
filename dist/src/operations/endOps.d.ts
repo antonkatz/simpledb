@@ -1,4 +1,4 @@
-import { BasicOperation } from "./Operation";
+import { BasicOperation } from "./BasicOperation";
 declare const _default: {
     Once: BasicOperation<unknown, unknown, unknown>;
 };

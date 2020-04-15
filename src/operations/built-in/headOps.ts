@@ -1,6 +1,6 @@
-import {BasicOperation} from "./Operation"
-import {from, Observable} from "rxjs"
-import {registerOperation} from "./operationRegistry"
+import {from, Observable}  from "rxjs"
+import {registerOperation} from "../operationRegistry"
+import {BasicOperation}    from "../BasicOperation";
 
 export class HeadOp<V> extends BasicOperation<void, V, { head: V }> {
 

@@ -1,4 +1,4 @@
-import {Map} from "immutable"
+import {Map}   from "immutable"
 import {Table} from "./Table"
 
 let tableRegistry = Map<string, Table<any>>()
