@@ -115,6 +115,10 @@ export class Table<V> {
         return p
     };
 
+    clear = () => {
+        this.db.then(_ => _.clear())
+    }
+
     getStream = () => this.subject.asObservable();
 
     withTransformer = (watcher: (entryStream: Observable<TableStreamEntry<V>>) => Observable<TableStreamEntry<V>>): this => {

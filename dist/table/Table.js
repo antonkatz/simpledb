@@ -72,6 +72,9 @@ class Table {
             stream.resume();
             return p;
         };
+        this.clear = () => {
+            this.db.then(_ => _.clear());
+        };
         this.getStream = () => this.subject.asObservable();
         this.withTransformer = (watcher) => {
             this.replaceEntryStream(watcher(this.entryStream));
