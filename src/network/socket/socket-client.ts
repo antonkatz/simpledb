@@ -1,8 +1,9 @@
 import {OperationStream}                               from "../../execution/OperationStream";
 import {BehaviorSubject, fromEvent, NEVER, Observable} from "rxjs";
-import {IS_BROWSER}                                    from "../../index";
 import {first, flatMap, tap}                           from "rxjs/operators";
-import {ID_DIGEST}                                     from "../IdDigest";
+import {ID_DIGEST}         from "../IdDigest";
+import {ConnectionContext} from "./ConnectionContext";
+import {isBrowser, isNode} from "browser-or-node";
 
 export default class NetworkStream {
     private socket: BehaviorSubject<SocketIOClient.Socket | null> =
@@ -13,8 +14,6 @@ export default class NetworkStream {
     }
 
     async connect() {
-        if (IS_BROWSER) {
-
             console.debug('NetworkStream is connecting...');
 
             this.socketio = (await import('socket.io-client').then()).default;
@@ -25,7 +24,6 @@ export default class NetworkStream {
                 console.debug('Closing socket in `beforeunload`');
                 _t.socket.toPromise().then(_ => _ && _.close());
             });
-        }
     }
 
     private openSocket() {
@@ -39,11 +37,9 @@ export default class NetworkStream {
         this.socket.next(s)
     }
 
-    requestStream<Out>(opStream: OperationStream<void, Out, never>): Observable<Out> {
+    requestStream<Out>(opStream: OperationStream<void, Out, never | ConnectionContext>): Observable<Out> {
         // todo make sure to ack
         console.debug('Request to server is waiting to be subscribed');
-
-        if (!IS_BROWSER) return NEVER;
 
         return this.socket.pipe(
             first(s => {
@@ -67,8 +63,6 @@ export default class NetworkStream {
                 )
             })
         )
-
-
     }
 
 }

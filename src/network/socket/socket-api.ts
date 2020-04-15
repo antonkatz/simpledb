@@ -1,9 +1,10 @@
 import {rehydrateOpStreamFromJson}              from "../../serialization";
 import {NEVER}                                  from "rxjs";
-import crypto                                   from 'crypto'
 import {tap}                                    from "rxjs/operators";
 import {subscribeWithTracking, unsubscribleAll} from "./tracking";
 import {ID_DIGEST}                              from "../IdDigest";
+import {ConnectionContext}                      from "./ConnectionContext";
+import {Socket}                                 from "socket.io";
 
 
 export default async function startStreamingServer(key: Buffer, cert: Buffer) {
@@ -42,13 +43,14 @@ export default async function startStreamingServer(key: Buffer, cert: Buffer) {
     server.listen(3001)
 }
 
-async function onStreamRequest(socket: any, dehydratedStream: string) {
+async function onStreamRequest(socket: Socket, dehydratedStream: string) {
     // console.debug(`Server got dehydrated: ${dehydratedStream}`)
 
     const opId = await ID_DIGEST(dehydratedStream)
     const opStream = rehydrateOpStreamFromJson(dehydratedStream);
 
-    const obs = opStream.run(NEVER, {}).pipe(
+    const connCtx = createConnectionContext(opId, socket.id)
+    const obs = opStream.run(NEVER, connCtx).pipe(
         tap(v => {
             // console.debug(`Server tapped: ${JSON.stringify(v)}`)
             console.debug(`Responded to '${socket.id}' -- '${opId}'`)
@@ -57,4 +59,13 @@ async function onStreamRequest(socket: any, dehydratedStream: string) {
     )
 
     subscribeWithTracking(socket.id, opId, obs)
+}
+
+function createConnectionContext(opId: string, socketId: string): ConnectionContext {
+    return {
+        _connection: {
+            socketId,
+            opId
+        }
+    }
 }

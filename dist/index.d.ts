@@ -15,6 +15,7 @@ export { rehydrateOpStream } from "./serialization/index";
 export { fetchSimpleDb } from './network/http/http-client';
 export { default as startStreamingServer } from './network/socket/socket-api';
 export { default as NetworkStream } from './network/socket/socket-client';
+export { ConnectionContext } from './network/socket/ConnectionContext';
 export { SecurityError } from './security/Security';
 /** @deprecated use browser-or-node */
 export declare const IS_BROWSER: boolean;

@@ -38,14 +38,14 @@ export class Table<V> {
     }
 
     put = (key: string, value: V) => {
-        return new Promise<string>((doneResolver: (k: string | undefined) => void) => {
+        return new Promise<string | undefined>((doneResolver: (k: string | undefined) => void) => {
             // console.debug('Putting', key, value)
             this.subject.next({key, value, type: 'put', doneResolver})
         })
     };
 
     del = (key: string) => {
-        return new Promise<string>((doneResolver: (k: string | undefined) => void) => {
+        return new Promise<string | undefined>((doneResolver: (k: string | undefined) => void) => {
             // console.debug('Deleting', key)
             this.subject.next({key, type: 'del', doneResolver})
         })

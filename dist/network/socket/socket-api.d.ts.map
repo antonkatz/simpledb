@@ -1,1 +1,1 @@
-{"version":3,"file":"socket-api.d.ts","sourceRoot":"","sources":["../../../src/network/socket/socket-api.ts"],"names":[],"mappings":";AAQA,wBAA8B,oBAAoB,CAAC,GAAG,EAAE,MAAM,EAAE,IAAI,EAAE,MAAM,iBAkC3E"}
+{"version":3,"file":"socket-api.d.ts","sourceRoot":"","sources":["../../../src/network/socket/socket-api.ts"],"names":[],"mappings":";AASA,wBAA8B,oBAAoB,CAAC,GAAG,EAAE,MAAM,EAAE,IAAI,EAAE,MAAM,iBAkC3E"}

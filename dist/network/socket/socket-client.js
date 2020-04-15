@@ -8,7 +8,6 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const rxjs_1 = require("rxjs");
-const index_1 = require("../../index");
 const operators_1 = require("rxjs/operators");
 const IdDigest_1 = require("../IdDigest");
 class NetworkStream {
@@ -21,16 +20,14 @@ class NetworkStream {
         this.socketio = null;
     }
     async connect() {
-        if (index_1.IS_BROWSER) {
-            console.debug('NetworkStream is connecting...');
-            this.socketio = (await Promise.resolve().then(() => __importStar(require('socket.io-client'))).then()).default;
-            this.openSocket();
-            const _t = this;
-            window.addEventListener('beforeunload', function () {
-                console.debug('Closing socket in `beforeunload`');
-                _t.socket.toPromise().then(_ => _ && _.close());
-            });
-        }
+        console.debug('NetworkStream is connecting...');
+        this.socketio = (await Promise.resolve().then(() => __importStar(require('socket.io-client'))).then()).default;
+        this.openSocket();
+        const _t = this;
+        window.addEventListener('beforeunload', function () {
+            console.debug('Closing socket in `beforeunload`');
+            _t.socket.toPromise().then(_ => _ && _.close());
+        });
     }
     openSocket() {
         const port = this.port ? `:${this.port}` : '';
@@ -44,8 +41,6 @@ class NetworkStream {
     requestStream(opStream) {
         // todo make sure to ack
         console.debug('Request to server is waiting to be subscribed');
-        if (!index_1.IS_BROWSER)
-            return rxjs_1.NEVER;
         return this.socket.pipe(operators_1.first(s => {
             console.debug('NetworkStream attempting to use socket', s && s.id);
             return !!s;

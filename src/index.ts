@@ -2,8 +2,8 @@ import {isBrowser} from 'browser-or-node'
 
 export {default as DbBasePath} from "./database/DbBasePath"
 
-export type {TableRecord} from './table/Table'
-export * from './table/TableStreamEntry'
+export type {TableRecord}         from './table/Table'
+export *                          from './table/TableStreamEntry'
 export {buildTable, TableBuilder} from './table/buildTable'
 
 export type {OrEmpty, Operation} from './operations/Operation'
@@ -22,7 +22,7 @@ export {rehydrateOpStream}                                    from "./serializat
 export {fetchSimpleDb}                   from './network/http/http-client'
 export {default as startStreamingServer} from './network/socket/socket-api'
 export {default as NetworkStream}        from './network/socket/socket-client'
-
+export {ConnectionContext}               from './network/socket/ConnectionContext'
 
 export {SecurityError} from './security/Security'
 
