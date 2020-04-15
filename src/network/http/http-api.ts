@@ -1,10 +1,7 @@
 import {NEVER} from "rxjs"
-import {first}          from "rxjs/operators"
-import {globalBasePath}    from "../../database/globalBasePath";
-import {SecurityError}     from "../../security/Security";
+import {first}         from "rxjs/operators"
+import {SecurityError} from "../../security/Security";
 import {rehydrateOpStream} from "../../serialization";
-
-globalBasePath.setPath('../../');
 
 // @ts-ignore
 export default async function HttpEndpoint (req, res) {

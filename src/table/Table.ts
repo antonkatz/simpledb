@@ -1,6 +1,6 @@
 import {concat, Observable, Subject, Subscription} from "rxjs"
 import {LevelUp}                                   from "levelup"
-import {filter, map, tap}                          from "rxjs/operators"
+import {filter, map, tap, first}                          from "rxjs/operators"
 import {Codec, StringCodec}                        from "./Codec";
 import {Maybe, None}                               from "monet";
 import {TableStreamEntry}                          from "./TableStreamEntry";
@@ -82,7 +82,13 @@ export class Table<V> {
         return concat(pendingState, updateStream)
     };
 
-    rangeSync = async (fromKey: string, toKey?: string, limit= 1, reverse: boolean = false)
+    getSync = (key: string): Promise<V | undefined> => {
+        return this.get(key).pipe(
+            first()
+        ).toPromise()
+    }
+
+    rangeSync = async (fromKey?: string, toKey?: string, limit= 1, reverse: boolean = false)
         : Promise<TableRecord<V>[]> => {
         const stream =  (await this.db).createReadStream({
             gt: fromKey, lt: toKey, limit, reverse

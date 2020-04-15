@@ -2,10 +2,10 @@ import {DB_ADAPTER}                   from "../database/adapter";
 import {AbstractLevelDOWNConstructor} from "abstract-leveldown";
 import {buildJsonCodec, Codec}        from "./Codec";
 import {Table}                        from "./Table";
-import {globalBasePath}               from "..";
-import levelup         from "levelup";
-import {registerTable} from "./tableRegistry";
-import {curry}         from 'lodash/fp'
+import levelup                        from "levelup";
+import {registerTable}                from "./tableRegistry";
+import {curry}                        from 'lodash/fp'
+import DbBasePath                     from "../database/DbBasePath";
 
 export type DbApiOptions = {
     name: string
@@ -19,7 +19,7 @@ export const buildTable: <V>(options: DbApiOptions, codec?: Codec<V>) => Table<V
 function _buildTable<V>(adapter: Promise<AbstractLevelDOWNConstructor>, options: DbApiOptions, codec: Codec<V> = buildJsonCodec()): Table<V> {
     const relPath = options.basePath || './db';
 
-    const db = globalBasePath.path.then(async basePath => {
+    const db = DbBasePath.path.then(async basePath => {
         const _a = await adapter;
         const path = basePath + relPath + '-' + options.name;
 

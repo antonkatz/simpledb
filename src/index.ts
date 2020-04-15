@@ -1,6 +1,6 @@
 import {isBrowser} from 'browser-or-node'
 
-export {globalBasePath} from "./database/globalBasePath"
+export {default as DbBasePath} from "./database/DbBasePath"
 
 export type {TableRecord} from './table/Table'
 export * from './table/TableStreamEntry'
