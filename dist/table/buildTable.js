@@ -14,10 +14,10 @@ const DbBasePath_1 = __importDefault(require("../database/DbBasePath"));
 exports.TableBuilder = fp_1.curry(_buildTable)(adapter_1.DB_ADAPTER);
 exports.buildTable = fp_1.curry(_buildTable)(adapter_1.DB_ADAPTER);
 function _buildTable(adapter, options, codec = Codec_1.buildJsonCodec()) {
-    const relPath = options.basePath || './db';
+    const relPath = options.relativePath || '';
     const db = DbBasePath_1.default.path.then(async (basePath) => {
         const _a = await adapter;
-        const path = basePath + relPath + '-' + options.name;
+        const path = basePath + relPath + 'db-' + options.name;
         console.debug('Opening DB on path ' + path);
         const _db = _a(path);
         return levelup_1.default(_db);

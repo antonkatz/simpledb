@@ -87,11 +87,7 @@ class Table {
         this.subscription.forEach(_ => _.unsubscribe());
         this.entryStream = newStream;
         const sub = this.entryStream.subscribe(e => {
-            this.onEntry(e).then(res => {
-                e.doneResolver(res)
-            }).catch(() => {
-                e.doneResolver(undefined)
-            });
+            this.onEntry(e).then(e.doneResolver).catch(() => e.doneResolver(undefined));
         });
         this.subscription = monet_1.Maybe.fromNull(sub);
     }
@@ -100,12 +96,7 @@ class Table {
             return this.db.then(db => db.del(entry.key)).then(() => entry.key);
         }
         else if (entry.type === "put") {
-            return this.db.then(db => {
-                db.put(entry.key, this.codec.dehydrate(entry.value)).then(
-                        () => entry.key
-                    )
-                }
-            );
+            return this.db.then(db => db.put(entry.key, this.codec.dehydrate(entry.value)).then(() => entry.key));
         }
         throw new Error('More operation types than accounted for in TableApi');
     }

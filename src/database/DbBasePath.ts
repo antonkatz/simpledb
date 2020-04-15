@@ -2,7 +2,11 @@ import {BehaviorSubject, Subject} from "rxjs";
 import {filter, first}            from "rxjs/operators";
 
 class GlobalBasePath {
-    private subject = new BehaviorSubject<string | undefined>(process && process.env.DB_BASE_PATH)
+    private subject = new BehaviorSubject<string | undefined>(undefined)
+
+    constructor() {
+        process && process.env.DB_BASE_PATH && this.setPath(process.env.DB_BASE_PATH)
+    }
 
     setPath(path: string) {
         if (path.charAt(path.length - 1) != '/') {

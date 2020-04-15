@@ -4,7 +4,8 @@ const rxjs_1 = require("rxjs");
 const operators_1 = require("rxjs/operators");
 class GlobalBasePath {
     constructor() {
-        this.subject = new rxjs_1.BehaviorSubject(process && process.env.DB_BASE_PATH);
+        this.subject = new rxjs_1.BehaviorSubject(undefined);
+        process && process.env.DB_BASE_PATH && this.setPath(process.env.DB_BASE_PATH);
     }
     setPath(path) {
         if (path.charAt(path.length - 1) != '/') {
