@@ -37,7 +37,7 @@ export declare class TableGetForUpdate<V> extends BasicOperation<string, TableRe
 export declare class TablePutOp<V> extends BasicOperation<{
     key: string;
     value: V;
-}, string, {
+}, string | undefined, {
     table: Table<V>;
 }> {
     protected name: string;
@@ -50,7 +50,7 @@ export declare class TablePutOp<V> extends BasicOperation<{
     }, inObs: Observable<{
         key: string;
         value: V;
-    }>): Observable<string>;
+    }>): Observable<string | undefined>;
 }
 export declare class TableFilterNotExists<V> extends BasicOperation<{
     key: string;

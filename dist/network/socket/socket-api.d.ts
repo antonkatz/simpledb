@@ -1,3 +1,6 @@
 /// <reference types="node" />
-export default function startStreamingServer(key: Buffer, cert: Buffer): Promise<void>;
+import { Socket } from "socket.io";
+export default function startStreamingServer(key: Buffer, cert: Buffer, eventListeners?: {
+    onDisconnect?: (socket: Socket) => void;
+}): Promise<void>;
 //# sourceMappingURL=socket-api.d.ts.map

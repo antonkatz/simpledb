@@ -1,5 +1,3 @@
-import {isBrowser} from 'browser-or-node'
-
 export {default as DbBasePath} from "./database/DbBasePath"
 
 export type {TableRecord}         from './table/Table'
@@ -26,14 +24,10 @@ export {ConnectionContext}               from './network/socket/ConnectionContex
 
 export {SecurityError} from './security/Security'
 
-
-// export const IS_BROWSER = typeof process === 'undefined' || process.type === 'renderer' || process.browser === true || process.__nwjs
-
-/** @deprecated use browser-or-node */
-export const IS_BROWSER = isBrowser;
-
-console.log("IS_BROWSER", IS_BROWSER);
-
+export {IS_BROWSER} from './utils'
 
 export {TableStreamEntry} from "./table/TableStreamEntry";
 export {TablePutEntry}    from "./table/TableStreamEntry";
+
+import {enablePatches} from "immer";
+enablePatches()

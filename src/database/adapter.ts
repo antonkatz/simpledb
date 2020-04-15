@@ -1,9 +1,9 @@
 import {AbstractLevelDOWNConstructor} from "abstract-leveldown";
-import {isBrowser}                    from "browser-or-node";
+import {IS_BROWSER}                   from "../utils";
 
 export let DB_ADAPTER: Promise<AbstractLevelDOWNConstructor>;
 
-if (isBrowser) {
+if (IS_BROWSER) {
     console.warn('Empty DB_ADAPTER');
     // @ts-ignore
     DB_ADAPTER = Promise.resolve("empty")

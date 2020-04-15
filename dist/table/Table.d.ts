@@ -2,6 +2,7 @@ import { Observable } from "rxjs";
 import { LevelUp } from "levelup";
 import { Codec } from "./Codec";
 import { TableStreamEntry } from "./TableStreamEntry";
+import { Patch } from "immer";
 export declare type TableRecord<V> = {
     key: string;
     value: V;
@@ -13,11 +14,17 @@ export declare class Table<V> {
     private subject;
     private entryStream;
     private subscription;
+    private transientState;
     constructor(name: string, db: Promise<LevelUp<any>>, codec: Codec<V>);
     private replaceEntryStream;
     private onEntry;
-    put: (key: string, value: V) => Promise<string>;
-    del: (key: string) => Promise<string>;
+    private updateTransient;
+    private commitTransient;
+    private flushTransient;
+    /** @deprecated for internal use only; use `patch` instead; put will become private */
+    put: (key: string, value: V) => Promise<string | undefined>;
+    patch: (key: string, patch: Patch[], onExistingOnly?: boolean) => void;
+    del: (key: string) => Promise<string | undefined>;
     get: (key: string) => Observable<V | undefined>;
     getSync: (key: string) => Promise<V | undefined>;
     rangeSync: (fromKey?: string | undefined, toKey?: string | undefined, limit?: number, reverse?: boolean) => Promise<TableRecord<V>[]>;

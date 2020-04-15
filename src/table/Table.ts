@@ -1,9 +1,10 @@
-import {concat, Observable, Subject, Subscription} from "rxjs"
-import {LevelUp}                                   from "levelup"
-import {filter, map, tap, first}                          from "rxjs/operators"
+import {concat, Observable, of, Subject, Subscription} from "rxjs"
+import {LevelUp}                                       from "levelup"
+import {filter, map, tap, first}                   from "rxjs/operators"
 import {Codec, StringCodec}                        from "./Codec";
-import {Maybe, None}                               from "monet";
-import {TableStreamEntry}                          from "./TableStreamEntry";
+import {Maybe, None}                      from "monet";
+import {TableStreamEntry, TransientEntry} from "./TableStreamEntry";
+import {applyPatches, Patch}              from "immer";
 
 export type TableRecord<V> = {key: string, value: V}
 
@@ -11,6 +12,8 @@ export class Table<V> {
     private subject: Subject<TableStreamEntry<V>> = new Subject();
     private entryStream = this.subject.asObservable();
     private subscription: Maybe<Subscription> = None()
+
+    private transientState = new Map<string, TransientEntry<V>>()
 
     constructor(readonly name: string, readonly db: Promise<LevelUp<any>>, readonly codec: Codec<V>) {
         this.replaceEntryStream(this.entryStream)
@@ -21,28 +24,127 @@ export class Table<V> {
 
         this.entryStream = newStream
         const sub = this.entryStream.subscribe(e => {
-            this.onEntry(e).then(e.doneResolver).catch(() => e.doneResolver(undefined))
+            this.onEntry(e).then(() => e.doneResolver(e.key)).catch(() => e.doneResolver(undefined))
         })
         this.subscription = Maybe.fromNull(sub)
     }
 
-    private onEntry(entry: TableStreamEntry<V>): Promise<string> {
+    private onEntry(entry: TableStreamEntry<V>): Promise<void> {
+        let res;
+
+        let transientUpdate: V | null;
         if (entry.type === 'del') {
-            return this.db.then(db => db.del(entry.key)).then(() => entry.key)
-        } else if (entry.type === "put") {
-            return this.db.then(db =>
-                db.put(entry.key, this.codec.dehydrate(entry.value)).then(() => entry.key))
+            transientUpdate = null
+        } else if (entry.type === 'put') {
+            transientUpdate = entry.value
+        } else {
+            throw new Error('More operation types than accounted for in TableApi')
         }
 
-        throw new Error('More operation types than accounted for in TableApi')
+        const {version, promise} = this.updateTransient(entry.key, transientUpdate)
+
+        if (version === 0) {
+            if (entry.type === 'del') {
+                    res = this.db.then(db => db.del(entry.key))
+            } else if (entry.type === "put") {
+                    res = this.db.then(db =>
+                        db.put(entry.key, this.codec.dehydrate(entry.value)))
+            }
+        } else {
+            return promise
+        }
+
+        if (!res) {
+            throw new Error("Impossible condition in Table `onEntry`. Probably a bug")
+        }
+
+        res.finally(() => {
+            // fixme does not account for errors yet
+            this.flushTransient(entry.key, version)
+        })
+
+        return res
     }
 
+    private updateTransient(key: string, value: V | null): TransientEntry<V> {
+        const existing = this.transientState.get(key)
+        if (existing) {
+            const updated = {...existing, value, version: existing.version + 1}
+            this.transientState.set(key, updated)
+            return updated
+        } else {
+            let resolver: (() => void) | null = null;
+            const promise = new Promise<void>(res => {
+                resolver = res
+            })
+            if (!resolver) {
+                throw new Error("Impossible condition in Table `updateTransient`. Probably a bug")
+            }
+
+            const newEntry = {version: 0, value, promise, resolver}
+            this.transientState.set(key, newEntry)
+            return newEntry
+        }
+    }
+
+    private commitTransient(key: string, state: TransientEntry<V>) {
+        if (state.value === null) {
+            this.del(key)
+        } else {
+            this.put(key, state.value)
+        }
+    }
+
+    private flushTransient(key: string, lastVersion: number) {
+        const state = this.transientState.get(key)
+        if (!state) throw new Error('Impossible condition in Table `flushTransient`. Probably a bug')
+
+        this.transientState.delete(key)
+        if (state.version === lastVersion) {
+            state.resolver()
+        } else {
+            this.commitTransient(key, state)
+        }
+    }
+
+    /** @deprecated for internal use only; use `patch` instead; put will become private */
     put = (key: string, value: V) => {
         return new Promise<string | undefined>((doneResolver: (k: string | undefined) => void) => {
             // console.debug('Putting', key, value)
             this.subject.next({key, value, type: 'put', doneResolver})
         })
     };
+
+    // todo. `create` function that only executes if no record is present
+
+    overwrite: (key: string, value: V) => Promise<string | undefined> = this.put
+
+    patch = (key: string, patch: Patch[], onExistingOnly: boolean = true): Promise<string | undefined> => {
+        // onExistingOnly prevents a delete -> create (when no new object should be created)
+        let transient = this.transientState.get(key)
+        if (transient) {
+            if (onExistingOnly && transient.value === null) return Promise.reject('Key exists')
+            return this.patchTransient(key, patch, transient)
+        } else {
+            return this.getSync(key).then(value => {
+                transient = this.transientState.get(key)
+                if (!transient) {
+                    if (onExistingOnly && (value === null)) return Promise.reject('Key exists')
+                    const updated = applyPatches(value || {}, patch)
+                    return this.put(key, updated)
+                } else {
+                    if (onExistingOnly && (transient.value === null)) return Promise.reject('Key exists')
+                    return this.patchTransient(key, patch, transient)
+                }
+            })
+        }
+    }
+
+    private patchTransient(key: string, patch: Patch[], entry: TransientEntry<V>): Promise<string | undefined> {
+        const updated = applyPatches(entry.value || {}, patch)
+        const {promise} = this.updateTransient(key, updated)
+        return promise.then(() => key).catch(() => undefined)
+    }
 
     del = (key: string) => {
         return new Promise<string | undefined>((doneResolver: (k: string | undefined) => void) => {
@@ -53,6 +155,11 @@ export class Table<V> {
 
     get = (key: string): Observable<V | undefined> => {
         console.log(`Table [${this.name}] getting key '${key}' `);
+        // let transient = this.transientState.get(key)
+        // if (transient) {
+        //     return concat(of(transient.value || undefined)
+        // }
+
         const existing = this.db.then(db => db.get(key))
             .then(this.codec.rehydrate)
             .catch(e => {
@@ -80,6 +187,13 @@ export class Table<V> {
         });
 
         return concat(pendingState, updateStream)
+        //     .pipe(
+        //     map(v => {
+        //         let transient = this.transientState.get(key)
+        //         if (transient) return transient.value || undefined
+        //         return v
+        //     })
+        // )
     };
 
     getSync = (key: string): Promise<V | undefined> => {

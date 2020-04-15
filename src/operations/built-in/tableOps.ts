@@ -75,7 +75,7 @@ export class TableGetForUpdate<V>
 registerOperation(TableGetForUpdate)
 
 export class TablePutOp<V>
-    extends BasicOperation<{key: string, value: V}, string, { table: Table<V> }> {
+    extends BasicOperation<{key: string, value: V}, string | undefined, { table: Table<V> }> {
 
     protected name: string = "TablePutOp";
 
@@ -88,7 +88,7 @@ export class TablePutOp<V>
     }
 
     _operation(ctx: { table: Table<V> }, inObs: Observable<{key: string, value: V}>):
-        Observable<string> {
+        Observable<string | undefined> {
         return inObs.pipe(
             flatMap(kv => {
                 // console.log(`Putting:\n${JSON.stringify(kv.value, null, 2)}`)

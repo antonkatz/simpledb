@@ -12,11 +12,17 @@ class Table {
         this.subject = new rxjs_1.Subject();
         this.entryStream = this.subject.asObservable();
         this.subscription = monet_1.None();
+        this.transientState = new Map();
+        /** @deprecated for internal use only; use `patch` instead; put will become private */
         this.put = (key, value) => {
             return new Promise((doneResolver) => {
                 // console.debug('Putting', key, value)
                 this.subject.next({ key, value, type: 'put', doneResolver });
             });
+        };
+        // todo. `create` function that only executes if no record is present
+        this.patch = (key, patch, onExistingOnly = true) => {
+            // onExistingOnly prevents a delete -> create (when no new object should be created)
         };
         this.del = (key) => {
             return new Promise((doneResolver) => {
@@ -90,18 +96,82 @@ class Table {
         this.subscription.forEach(_ => _.unsubscribe());
         this.entryStream = newStream;
         const sub = this.entryStream.subscribe(e => {
-            this.onEntry(e).then(e.doneResolver).catch(() => e.doneResolver(undefined));
+            this.onEntry(e).then(() => e.doneResolver(e.key)).catch(() => e.doneResolver(undefined));
         });
         this.subscription = monet_1.Maybe.fromNull(sub);
     }
     onEntry(entry) {
+        let res;
+        let transientUpdate;
         if (entry.type === 'del') {
-            return this.db.then(db => db.del(entry.key)).then(() => entry.key);
+            transientUpdate = null;
         }
-        else if (entry.type === "put") {
-            return this.db.then(db => db.put(entry.key, this.codec.dehydrate(entry.value)).then(() => entry.key));
+        else if (entry.type === 'put') {
+            transientUpdate = entry.value;
         }
-        throw new Error('More operation types than accounted for in TableApi');
+        else {
+            throw new Error('More operation types than accounted for in TableApi');
+        }
+        const { version, promise } = this.updateTransient(entry.key, transientUpdate);
+        if (version === 0) {
+            if (entry.type === 'del') {
+                res = this.db.then(db => db.del(entry.key));
+            }
+            else if (entry.type === "put") {
+                res = this.db.then(db => db.put(entry.key, this.codec.dehydrate(entry.value)));
+            }
+        }
+        else {
+            return promise;
+        }
+        if (!res) {
+            throw new Error("Impossible condition in Table `onEntry`. Probably a bug");
+        }
+        res.finally(() => {
+            // fixme does not account for errors yet
+            this.flushTransient(entry.key, version);
+        });
+        return res;
+    }
+    updateTransient(key, value) {
+        const existing = this.transientState.get(key);
+        if (existing) {
+            const updated = { ...existing, value, version: existing.version + 1 };
+            this.transientState.set(key, updated);
+            return updated;
+        }
+        else {
+            let resolver = null;
+            const promise = new Promise(res => {
+                resolver = res;
+            });
+            if (!resolver) {
+                throw new Error("Impossible condition in Table `updateTransient`. Probably a bug");
+            }
+            const newEntry = { version: 0, value, promise, resolver };
+            this.transientState.set(key, newEntry);
+            return newEntry;
+        }
+    }
+    commitTransient(key, state) {
+        if (state.value === null) {
+            this.del(key);
+        }
+        else {
+            this.put(key, state.value);
+        }
+    }
+    flushTransient(key, lastVersion) {
+        const state = this.transientState.get(key);
+        if (!state)
+            throw new Error('Impossible condition in Table `flushTransient`. Probably a bug');
+        this.transientState.delete(key);
+        if (state.version === lastVersion) {
+            state.resolver();
+        }
+        else {
+            this.commitTransient(key, state);
+        }
     }
     toJSON() {
         return { resourceType: 'table', name: this.name };

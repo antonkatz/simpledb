@@ -12,7 +12,8 @@ const rxjs_1 = require("rxjs");
 const operators_1 = require("rxjs/operators");
 const tracking_1 = require("./tracking");
 const IdDigest_1 = require("../IdDigest");
-async function startStreamingServer(key, cert) {
+const monet_1 = require("monet");
+async function startStreamingServer(key, cert, eventListeners) {
     console.log('Starting streaming server');
     const express = await Promise.resolve().then(() => __importStar(require("express"))).then(i => i.default);
     const https = await Promise.resolve().then(() => __importStar(require("https"))).then(i => i.default);
@@ -29,11 +30,15 @@ async function startStreamingServer(key, cert) {
         cert
     }, app);
     const io = socketio(server, { serveClient: false, transports: ['websocket'] });
+    const onDisconnect$ = monet_1.Maybe.fromNull(eventListeners).flatMap(_ => monet_1.Maybe.fromNull(_.onDisconnect));
     io.on('connection', (socket) => {
         console.debug(`User connected: ${socket.id}`);
         const osr = (ds) => onStreamRequest(socket, ds);
         socket.on('streamRequest', osr);
-        socket.on('disconnect', () => tracking_1.unsubscribleAll(socket.id));
+        socket.on('disconnect', () => {
+            tracking_1.unsubscribleAll(socket.id);
+            onDisconnect$.forEach(_ => _(socket));
+        });
     });
     server.listen(3001);
 }
