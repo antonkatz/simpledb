@@ -13,7 +13,6 @@ class HeadOp extends BasicOperation_1.BasicOperation {
         return true;
     }
     _operation(ctx) {
-        console.log(`${this.name} executed with context ${JSON.stringify(ctx)}`);
         return rxjs_1.from([ctx.head]);
     }
 }

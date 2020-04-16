@@ -93,36 +93,39 @@ class Table {
         this.getSync = (key) => {
             return this.get(key).pipe(operators_1.first()).toPromise();
         };
-        this.rangeSync = async (fromKey, toKey, limit = 1, reverse = false) => {
-            const stream = (await this.db).createReadStream({
+        this.range = (fromKey, toKey, limit = 1, reverse = false) => {
+            const subject = new rxjs_1.Subject();
+            this.db.then(_ => _.createReadStream({
                 gt: fromKey, lt: toKey, limit, reverse
+            })).then(stream => {
+                stream.on('data', row => {
+                    const key = Codec_1.StringCodec.rehydrate(row.key);
+                    const value = this.codec.rehydrate(row.value);
+                    subject.next({ key, value });
+                });
+                stream.on('end', () => {
+                    subject.complete();
+                });
+                stream.resume();
             });
-            let res;
-            const p = new Promise(_res => res = _res);
-            const result = [];
-            stream.on('data', row => {
-                const key = Codec_1.StringCodec.rehydrate(row.key);
-                const value = this.codec.rehydrate(row.value);
-                result.push({ key, value });
-                console.log(`rangeSync got row: ${key}\n\t`, JSON.stringify(value));
-            });
-            stream.on('end', () => {
-                console.debug('rangeSync got `end`');
-                res(result);
-            });
-            stream.resume();
-            return p;
+            return subject.asObservable();
+        };
+        this.rangeSync = (fromKey, toKey, limit = 1, reverse = false) => {
+            return this.range().pipe(operators_1.reduce((acc, v) => {
+                acc.push(v);
+                return acc;
+            }, [])).toPromise();
         };
         this.clear = () => {
             this.db.then(_ => _.clear());
         };
-        this.getStream = () => this.subject.asObservable();
+        this.getStream = () => this.entryStream;
         this.withTransformer = (watcher) => {
             this.replaceEntryStream(watcher(this.entryStream));
             return this;
         };
         this.withWatcher = (watcher) => {
-            this.getStream().pipe(operators_1.tap(watcher)).subscribe();
+            this.replaceEntryStream(this.getStream().pipe(operators_1.tap(watcher)));
             return this;
         };
         this.replaceEntryStream(this.entryStream);

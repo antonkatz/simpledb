@@ -1,7 +1,7 @@
 import {concat, Observable, of, Subject, Subscription} from "rxjs"
-import {LevelUp}                                       from "levelup"
-import {filter, map, tap, first}                   from "rxjs/operators"
-import {Codec, StringCodec}                        from "./Codec";
+import {LevelUp}                         from "levelup"
+import {filter, map, tap, first, reduce} from "rxjs/operators"
+import {Codec, StringCodec}              from "./Codec";
 import {Maybe, None}                      from "monet";
 import {TableStreamEntry, TransientEntry} from "./TableStreamEntry";
 import {applyPatches, Patch}              from "immer";
@@ -202,38 +202,39 @@ export class Table<V> {
         ).toPromise()
     }
 
-    rangeSync = async (fromKey?: string, toKey?: string, limit= 1, reverse: boolean = false)
-        : Promise<TableRecord<V>[]> => {
-        const stream =  (await this.db).createReadStream({
+    range = (fromKey?: string, toKey?: string, limit= 1, reverse: boolean = false): Observable<TableRecord<V>> => {
+        const subject = new Subject<TableRecord<V>>()
+        this.db.then(_ => _.createReadStream({
             gt: fromKey, lt: toKey, limit, reverse
-        });
+        })).then(stream => {
+            stream.on('data', row => {
+                const key = StringCodec.rehydrate(row.key);
+                const value = this.codec.rehydrate(row.value);
+                subject.next({key, value});
+            });
 
-        let res: (v: any) => void;
-        const p = new Promise<{key: string, value: V}[]>(_res => res = _res);
-        const result: {key: string, value: V}[] = [];
+            stream.on('end', () => {
+                subject.complete()
+            });
+            stream.resume();
+        })
 
-        stream.on('data', row => {
-            const key = StringCodec.rehydrate(row.key);
-            const value = this.codec.rehydrate(row.value);
-            result.push({key, value});
+        return subject.asObservable()
+    };
 
-            console.log(`rangeSync got row: ${key}\n\t`, JSON.stringify(value))
-        });
-
-        stream.on('end', () => {
-            console.debug('rangeSync got `end`');
-            res(result)
-        });
-        stream.resume();
-
-        return p
+    rangeSync = (fromKey?: string, toKey?: string, limit= 1, reverse: boolean = false)
+        : Promise<TableRecord<V>[]> => {
+        return this.range().pipe(reduce((acc, v) => {
+            acc.push(v)
+            return acc
+        }, [] as TableRecord<V>[])).toPromise()
     };
 
     clear = () => {
         this.db.then(_ => _.clear())
     }
 
-    getStream = () => this.subject.asObservable();
+    getStream = () => this.entryStream;
 
     withTransformer = (watcher: (entryStream: Observable<TableStreamEntry<V>>) => Observable<TableStreamEntry<V>>): this => {
         this.replaceEntryStream(watcher(this.entryStream))
@@ -241,7 +242,7 @@ export class Table<V> {
     }
 
     withWatcher = (watcher: (entry: TableStreamEntry<V>) => void): this => {
-        this.getStream().pipe(tap(watcher)).subscribe();
+        this.replaceEntryStream(this.getStream().pipe(tap(watcher)));
         return this
     }
 

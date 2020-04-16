@@ -54,6 +54,20 @@ class TableGetForUpdate extends BasicOperation_1.BasicOperation {
 }
 exports.TableGetForUpdate = TableGetForUpdate;
 operationRegistry_1.registerOperation(TableGetForUpdate);
+class TableGetStreamingRange extends BasicOperation_1.BasicOperation {
+    constructor() {
+        super(...arguments);
+        this.name = "TableGetForUpdate";
+    }
+    _security(ctx) {
+        return true;
+    }
+    _operation(ctx, inObs) {
+        return inObs.pipe(operators_1.mergeMap(([start, end]) => ctx.table.range(start, end)));
+    }
+}
+exports.TableGetStreamingRange = TableGetStreamingRange;
+operationRegistry_1.registerOperation(TableGetStreamingRange);
 class TablePutOp extends BasicOperation_1.BasicOperation {
     constructor() {
         super();

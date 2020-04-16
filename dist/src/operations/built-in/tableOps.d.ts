@@ -34,6 +34,17 @@ export declare class TableGetForUpdate<V> extends BasicOperation<string, TableRe
         table: Table<V>;
     }, inObs: Observable<string>): Observable<TableRecord<V>>;
 }
+export declare class TableGetStreamingRange<V> extends BasicOperation<[string | undefined, string | undefined], TableRecord<V>, {
+    table: Table<V>;
+}> {
+    protected name: string;
+    _security(ctx: {
+        table: Table<V>;
+    }): boolean;
+    _operation(ctx: {
+        table: Table<V>;
+    }, inObs: Observable<[string | undefined, string | undefined]>): Observable<TableRecord<V>>;
+}
 export declare class TablePutOp<V> extends BasicOperation<{
     key: string;
     value: V;

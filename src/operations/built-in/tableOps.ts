@@ -1,7 +1,7 @@
 import {Table, TableRecord}               from "../../table/Table"
-import {Observable}                       from "rxjs"
-import {filter, first, flatMap, map, tap} from "rxjs/operators"
-import {registerOperation}                from "../operationRegistry"
+import {Observable}                                 from "rxjs"
+import {filter, first, flatMap, map, mergeMap, tap} from "rxjs/operators"
+import {registerOperation}                          from "../operationRegistry"
 import {BasicOperation}                   from "../BasicOperation";
 
 export class TableGetOp<V>
@@ -73,6 +73,23 @@ export class TableGetForUpdate<V>
 }
 
 registerOperation(TableGetForUpdate)
+
+export class TableGetStreamingRange<V>
+    extends BasicOperation<[string | undefined, string | undefined], TableRecord<V>, { table: Table<V> }> {
+    protected name: string = "TableGetForUpdate";
+
+    _security(ctx: { table: Table<V> }): boolean {
+        return true
+    }
+
+    _operation(ctx: { table: Table<V> }, inObs: Observable<[string | undefined, string | undefined]>): Observable<TableRecord<V>> {
+        return inObs.pipe(
+            mergeMap(([start, end]) => ctx.table.range(start, end))
+        )
+    }
+}
+
+registerOperation(TableGetStreamingRange)
 
 export class TablePutOp<V>
     extends BasicOperation<{key: string, value: V}, string | undefined, { table: Table<V> }> {

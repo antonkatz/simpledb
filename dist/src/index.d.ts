@@ -11,6 +11,8 @@ export * from "./operations/built-in/idOps";
 export * from "./operations/built-in/abstractOps";
 export * from "./operations/built-in/endOps";
 export * from "./operations/built-in/filterOps";
+export * from "./operations/built-in/mapOps";
+export * from "./operations/built-in/tableRecordOps";
 export { buildOpStream, BasicOperationStream, OperationStream } from './execution/OperationStream';
 export { rehydrateOpStream } from "./serialization/index";
 export { fetchSimpleDb } from './network/http/http-client';
@@ -19,7 +21,7 @@ export { default as startStreamingServer } from './network/socket/socket-api';
 export { default as NetworkStream } from './network/socket/socket-client';
 export { ConnectionContext } from './network/socket/ConnectionContext';
 export { SecurityError } from './security/Security';
-export { IS_BROWSER } from './utils';
+export * from './utils';
 export { TableStreamEntry } from "./table/TableStreamEntry";
 export { TablePutEntry } from "./table/TableStreamEntry";
 //# sourceMappingURL=index.d.ts.map

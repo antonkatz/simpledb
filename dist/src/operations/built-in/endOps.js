@@ -15,6 +15,5 @@ class Once extends BasicOperation_1.BasicOperation {
         return true;
     }
 }
-exports.default = {
-    Once: operationRegistry_1.registerOperation(Once),
-};
+exports.Once = Once;
+operationRegistry_1.registerOperation(Once);

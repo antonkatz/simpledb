@@ -13,6 +13,8 @@ const operators_1 = require("rxjs/operators");
 const tracking_1 = require("./tracking");
 const IdDigest_1 = require("../IdDigest");
 const monet_1 = require("monet");
+const immer_1 = require("immer");
+immer_1.enablePatches();
 async function startStreamingServer(key, cert, eventListeners) {
     console.log('Starting streaming server');
     const express = await Promise.resolve().then(() => __importStar(require("express"))).then(i => i.default);

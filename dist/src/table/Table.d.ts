@@ -29,6 +29,7 @@ export declare class Table<V> {
     del: (key: string) => Promise<string | undefined>;
     get: (key: string) => Observable<V | undefined>;
     getSync: (key: string) => Promise<V | undefined>;
+    range: (fromKey?: string | undefined, toKey?: string | undefined, limit?: number, reverse?: boolean) => Observable<TableRecord<V>>;
     rangeSync: (fromKey?: string | undefined, toKey?: string | undefined, limit?: number, reverse?: boolean) => Promise<TableRecord<V>[]>;
     clear: () => void;
     getStream: () => Observable<TableStreamEntry<V>>;

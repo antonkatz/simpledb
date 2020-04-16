@@ -14,6 +14,8 @@ export * from "./operations/built-in/idOps"
 export * from "./operations/built-in/abstractOps"
 export * from "./operations/built-in/endOps"
 export * from "./operations/built-in/filterOps"
+export * from "./operations/built-in/mapOps"
+export * from "./operations/built-in/tableRecordOps"
 
 export {buildOpStream, BasicOperationStream, OperationStream} from './execution/OperationStream'
 export {rehydrateOpStream}                                    from "./serialization/index"
@@ -26,7 +28,7 @@ export {ConnectionContext}               from './network/socket/ConnectionContex
 
 export {SecurityError} from './security/Security'
 
-export {IS_BROWSER} from './utils'
+export * from './utils'
 
 export {TableStreamEntry} from "./table/TableStreamEntry";
 export {TablePutEntry}    from "./table/TableStreamEntry";

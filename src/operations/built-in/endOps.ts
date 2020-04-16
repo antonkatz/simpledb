@@ -3,7 +3,7 @@ import {first}             from "rxjs/operators";
 import {registerOperation} from "../operationRegistry";
 import {BasicOperation}    from "../BasicOperation";
 
-class Once<In> extends BasicOperation<In, In, never> {
+export class Once<In> extends BasicOperation<In, In, never> {
     protected name: string = "Once";
 
     _operation(ctx: never, inObs: Observable<In>): Observable<In> {
@@ -18,6 +18,4 @@ class Once<In> extends BasicOperation<In, In, never> {
 
 }
 
-export default {
-    Once: registerOperation(Once),
-}
+registerOperation(Once)
