@@ -1,8 +1,8 @@
 import {Observable}                                                from "rxjs";
 import {BasicOperationStream, Operation, OperationStream, OrEmpty} from "..";
 import {List}                                                      from "immutable";
-import {OperationStreamSymbol}                                     from "../execution/OperationStream";
-import {OperationSymbol}                                           from "./Operation";
+import {OperationStreamSymbol}        from "../execution/OperationStream";
+import {OperationSymbol, VoidIfEmpty} from "./Operation";
 
 export abstract class BasicOperation<In, Out, Context> implements Operation<In, Out, Context> {
     readonly symbol = OperationSymbol;
@@ -51,11 +51,11 @@ export abstract class BasicOperation<In, Out, Context> implements Operation<In, 
 
 
     chain<NextOut, NextCtx>(op: Operation<Out, NextOut, NextCtx>):
-        OperationStream<In, NextOut, OrEmpty<NextCtx> & OrEmpty<Context>>
+        OperationStream<In, NextOut, VoidIfEmpty<OrEmpty<NextCtx> & OrEmpty<Context>>>
     chain<NextOut, NextCtx>(opStream: OperationStream<Out, NextOut, NextCtx>):
-        OperationStream<In, NextOut, OrEmpty<NextCtx> & OrEmpty<Context>>
+        OperationStream<In, NextOut, VoidIfEmpty<OrEmpty<NextCtx> & OrEmpty<Context>>>
     chain<NextOut, NextCtx>(opOrStream: Operation<Out, NextOut, NextCtx> | OperationStream<Out, NextOut, NextCtx>):
-        OperationStream<In, NextOut, OrEmpty<NextCtx> & OrEmpty<Context>> {
+        OperationStream<In, NextOut, VoidIfEmpty<OrEmpty<NextCtx> & OrEmpty<Context>>> {
 
         if (opOrStream.symbol === OperationSymbol) {
             const op = opOrStream as Operation<Out, NextOut, NextCtx>;

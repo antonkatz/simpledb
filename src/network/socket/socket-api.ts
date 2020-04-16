@@ -10,7 +10,7 @@ import {Maybe}                                  from "monet";
 
 export default async function startStreamingServer(key: Buffer, cert: Buffer,
                                                    eventListeners?: {
-                                                       onDisconnect?: (socket: Socket) => void
+                                                       onDisconnect?: (socketId: string) => void
                                                    }) {
     console.log('Starting streaming server');
 
@@ -45,7 +45,7 @@ export default async function startStreamingServer(key: Buffer, cert: Buffer,
 
         socket.on('disconnect', () => {
             unsubscribleAll(socket.id)
-            onDisconnect$.forEach(_ => _(socket))
+            onDisconnect$.forEach(_ => _(socket.id))
         })
     });
 

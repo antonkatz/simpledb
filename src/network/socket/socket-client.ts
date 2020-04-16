@@ -5,6 +5,8 @@ import {ID_DIGEST}         from "../IdDigest";
 import {ConnectionContext} from "./ConnectionContext";
 import {isBrowser, isNode} from "browser-or-node";
 
+export type ExactOrVoid<T, R> = T extends void ? void : (T extends R ? (R extends T ? T : void) : void)
+
 export default class NetworkStream {
     private socket: BehaviorSubject<SocketIOClient.Socket | null> =
         new BehaviorSubject<SocketIOClient.Socket | null>(null);
@@ -37,7 +39,7 @@ export default class NetworkStream {
         this.socket.next(s)
     }
 
-    requestStream<Out>(opStream: OperationStream<void, Out, never | ConnectionContext>): Observable<Out> {
+    requestStream<Out, Ctx extends (void | ConnectionContext)>(opStream: OperationStream<void, Out, ExactOrVoid<Ctx, ConnectionContext>>): Observable<Out> {
         // todo make sure to ack
         console.debug('Request to server is waiting to be subscribed');
 

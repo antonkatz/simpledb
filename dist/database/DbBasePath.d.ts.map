@@ -1,1 +1,0 @@
-{"version":3,"file":"DbBasePath.d.ts","sourceRoot":"","sources":["../../src/database/DbBasePath.ts"],"names":[],"mappings":"AAGA,cAAM,cAAc;IAChB,OAAO,CAAC,OAAO,CAAqD;;IAMpE,OAAO,CAAC,IAAI,EAAE,MAAM;IAQpB,IAAI,IAAI,IAAI,OAAO,CAAC,MAAM,CAAC,CAK1B;CACJ;AAED,QAAA,MAAM,UAAU,gBAAuB,CAAC;AACxC,eAAe,UAAU,CAAA"}

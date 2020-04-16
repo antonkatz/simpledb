@@ -1,6 +1,6 @@
-import {List} from "immutable"
-import {Operation, OrEmpty} from "../operations/Operation"
-import {runOp} from "./runOp"
+import {List}                            from "immutable"
+import {Operation, OrEmpty, VoidIfEmpty} from "../operations/Operation"
+import {runOp}                           from "./runOp"
 import {Observable, Subject} from "rxjs"
 import {SecurityError}       from "../security/Security"
 
@@ -15,13 +15,14 @@ export interface OperationStream<In, Out, Context> {
     // defaultContext?: Partial<Context>
 
     getContext(): any
-    setContext(ctx: Context): OperationStream<In, Out, never>
+    setContext(ctx: Context): OperationStream<In, Out, void>
+    withContext<PCtx extends Partial<Context>>(ctx: PCtx): OperationStream<In, Out, Omit<Context, keyof PCtx>>
 
     run(input: Observable<In>, ctx: Context): Observable<Out>
 
-    add<NextOut, NextCtx>(op: Operation<Out, NextOut, NextCtx>): OperationStream<In, NextOut, OrEmpty<NextCtx> & OrEmpty<Context>>
+    add<NextOut, NextCtx>(op: Operation<Out, NextOut, NextCtx>): OperationStream<In, NextOut, VoidIfEmpty<OrEmpty<NextCtx> & OrEmpty<Context>>>
     join<NextOut, OtherCtx>(otherStream: OperationStream<Out, NextOut, OtherCtx>):
-        OperationStream<In, NextOut, OrEmpty<OtherCtx> & OrEmpty<Context>>
+        OperationStream<In, NextOut, VoidIfEmpty<OrEmpty<OtherCtx> & OrEmpty<Context>>>
 
     serialize(): string
 }
@@ -42,7 +43,11 @@ export class BasicOperationStream<In, Out, Context> implements OperationStream<I
         return this.innerContext
     }
 
-    setContext(ctx: Context): OperationStream<In, Out, never> {
+    setContext(ctx: Context): OperationStream<In, Out, void> {
+        return new BasicOperationStream(this.chain, {...this.innerContext, ...ctx})
+    }
+
+    withContext<PCtx extends Partial<Context>>(ctx: PCtx): OperationStream<In, Out, Omit<Context, keyof PCtx>> {
         return new BasicOperationStream(this.chain, {...this.innerContext, ...ctx})
     }
 
@@ -74,12 +79,12 @@ export class BasicOperationStream<In, Out, Context> implements OperationStream<I
     }
 
     add<NextOut, NextCtx>(op: Operation<Out, NextOut, NextCtx>):
-        OperationStream<In, NextOut, OrEmpty<NextCtx> & OrEmpty<Context> > {
-        return new BasicOperationStream<In, NextOut, OrEmpty<NextCtx> & OrEmpty<Context>>(this.chain.push(op), this.innerContext)
+        OperationStream<In, NextOut, VoidIfEmpty<OrEmpty<NextCtx> & OrEmpty<Context>>> {
+        return new BasicOperationStream<In, NextOut, VoidIfEmpty<OrEmpty<NextCtx> & OrEmpty<Context>>>(this.chain.push(op), this.innerContext)
     }
 
     join<NextOut, OtherCtx>(otherStream: OperationStream<Out, NextOut, OtherCtx>):
-        OperationStream<In, NextOut, OrEmpty<OtherCtx> & OrEmpty<Context>> {
+        OperationStream<In, NextOut, VoidIfEmpty<OrEmpty<OtherCtx> & OrEmpty<Context>>> {
         const thisCtx: Partial<Context> = {...(this.innerContext || {})}
         const otherCtx: Partial<OtherCtx> = {...(otherStream.getContext() || {})}
         const fullCtx: Partial<Context & OtherCtx> = {...thisCtx, ...otherCtx} as Partial<Context & OtherCtx>

@@ -18,6 +18,7 @@ export {buildOpStream, BasicOperationStream, OperationStream} from './execution/
 export {rehydrateOpStream}                                    from "./serialization/index"
 
 export {fetchSimpleDb}                   from './network/http/http-client'
+export type {ExactOrVoid}                from './network/socket/socket-client'
 export {default as startStreamingServer} from './network/socket/socket-api'
 export {default as NetworkStream}        from './network/socket/socket-client'
 export {ConnectionContext}               from './network/socket/ConnectionContext'
