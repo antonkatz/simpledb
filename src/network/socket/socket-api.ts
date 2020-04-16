@@ -7,7 +7,6 @@ import {ConnectionContext}                      from "./ConnectionContext";
 import {Socket}                                 from "socket.io";
 import {Maybe}                                  from "monet";
 
-
 export default async function startStreamingServer(key: Buffer, cert: Buffer,
                                                    eventListeners?: {
                                                        onDisconnect?: (socketId: string) => void

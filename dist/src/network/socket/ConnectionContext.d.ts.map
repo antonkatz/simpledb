@@ -1,0 +1,1 @@
+{"version":3,"file":"ConnectionContext.d.ts","sourceRoot":"","sources":["../../../../src/network/socket/ConnectionContext.ts"],"names":[],"mappings":"AAAA,MAAM,WAAW,iBAAiB;IAC9B,WAAW,EAAE;QACT,QAAQ,EAAE,MAAM,CAAC;QACjB,IAAI,EAAE,MAAM,CAAA;KACf,CAAA;CACJ"}

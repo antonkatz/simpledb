@@ -11,6 +11,7 @@ export function getRegisteredOperation(opName: string) {
 // export function registerOperation(builder: () => OperationInstance<any, any, any>) {
 // fixme. use constructor name
 export function registerOperation<In, Out, Ctx, Op extends BasicOperation<In, Out, Ctx>>(op: new () => Op): Op {
+// export function registerOperation<In, Out, Ctx>(op: new () => BasicOperation<In, Out, Ctx>): BasicOperation<In, Out, Ctx> {
     console.log('registering', op.name)
     operationRegistry = operationRegistry.set(op.name, op)
 

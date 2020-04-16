@@ -3,7 +3,6 @@ import {BehaviorSubject, fromEvent, NEVER, Observable} from "rxjs";
 import {first, flatMap, tap}                           from "rxjs/operators";
 import {ID_DIGEST}         from "../IdDigest";
 import {ConnectionContext} from "./ConnectionContext";
-import {isBrowser, isNode} from "browser-or-node";
 
 export type ExactOrVoid<T, R> = T extends void ? void : (T extends R ? (R extends T ? T : void) : void)
 

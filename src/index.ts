@@ -13,6 +13,7 @@ export * from "./operations/built-in/tableOps"
 export * from "./operations/built-in/idOps"
 export * from "./operations/built-in/abstractOps"
 export * from "./operations/built-in/endOps"
+export * from "./operations/built-in/filterOps"
 
 export {buildOpStream, BasicOperationStream, OperationStream} from './execution/OperationStream'
 export {rehydrateOpStream}                                    from "./serialization/index"
@@ -29,6 +30,3 @@ export {IS_BROWSER} from './utils'
 
 export {TableStreamEntry} from "./table/TableStreamEntry";
 export {TablePutEntry}    from "./table/TableStreamEntry";
-
-import {enablePatches} from "immer";
-enablePatches()
