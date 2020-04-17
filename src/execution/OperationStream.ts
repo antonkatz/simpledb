@@ -98,6 +98,10 @@ export class BasicOperationStream<In, Out, Context> implements OperationStream<I
         const obj: SerializedOperationStream = {ctx: this.innerContext, chain: this.chain.toJSON(), __type: 'basicOperationStream'}
         return JSON.stringify(obj)
     }
+
+    toJSON() {
+        return {ctx: this.innerContext, chain: this.chain.toJSON(), __type: 'basicOperationStream'}
+    }
 }
 
 export function buildOpStream<In, Out, Context>

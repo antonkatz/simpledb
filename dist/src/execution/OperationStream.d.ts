@@ -31,6 +31,11 @@ export declare class BasicOperationStream<In, Out, Context> implements Operation
     add<NextOut, NextCtx>(op: Operation<Out, NextOut, NextCtx>): OperationStream<In, NextOut, VoidIfEmpty<OrEmpty<NextCtx> & OrEmpty<Context>>>;
     join<NextOut, OtherCtx>(otherStream: OperationStream<Out, NextOut, OtherCtx>): OperationStream<In, NextOut, VoidIfEmpty<OrEmpty<OtherCtx> & OrEmpty<Context>>>;
     serialize(): string;
+    toJSON(): {
+        ctx: any;
+        chain: Operation<any, any, any>[];
+        __type: string;
+    };
 }
 export declare function buildOpStream<In, Out, Context>(op: Operation<In, Out, Context>): OperationStream<In, Out, Context>;
 export declare function buildOpStream<In, Out, Context, DCtx extends Partial<Context>>(op: Operation<In, Out, Context>, defaultContext: DCtx): OperationStream<In, Out, OrEmpty<Omit<Context, keyof DCtx>>>;

@@ -58,6 +58,9 @@ class BasicOperationStream {
         const obj = { ctx: this.innerContext, chain: this.chain.toJSON(), __type: 'basicOperationStream' };
         return JSON.stringify(obj);
     }
+    toJSON() {
+        return { ctx: this.innerContext, chain: this.chain.toJSON(), __type: 'basicOperationStream' };
+    }
 }
 exports.BasicOperationStream = BasicOperationStream;
 function buildOpStream(op, defaultContext) {
