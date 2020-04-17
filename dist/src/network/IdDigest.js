@@ -8,8 +8,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const base64_1 = require("./socket/base64");
-const browser_or_node_1 = require("browser-or-node");
-if (browser_or_node_1.isBrowser) {
+const utils_1 = require("../utils");
+if (utils_1.IS_BROWSER) {
     exports.ID_DIGEST = what => {
         // @ts-ignore
         if (!crypto.subtle.digest)

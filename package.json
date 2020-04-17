@@ -24,7 +24,6 @@
     "uws": "github:mmdevries/uws#2.4.1"
   },
   "dependencies": {
-    "browser-or-node": "^1.2.1",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "fp-ts": "^2.5.1",

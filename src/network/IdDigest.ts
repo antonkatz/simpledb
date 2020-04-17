@@ -1,9 +1,9 @@
 import {bytesToBase64} from "./socket/base64";
-import {isBrowser}     from "browser-or-node";
+import {IS_BROWSER}    from "../utils";
 
 export let ID_DIGEST: (what: string) => PromiseLike<string>;
 
-if (isBrowser) {
+if (IS_BROWSER) {
     ID_DIGEST = what => {
         // @ts-ignore
         if (!crypto.subtle.digest) throw new Error('Browser is too old to support hashing');
