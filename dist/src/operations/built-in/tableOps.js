@@ -63,7 +63,10 @@ class TableGetStreamingRange extends BasicOperation_1.BasicOperation {
         return true;
     }
     _operation(ctx, inObs) {
-        return inObs.pipe(operators_1.mergeMap(([start, end]) => ctx.table.range(start, end)));
+        return inObs.pipe(operators_1.mergeMap(([start, end]) => {
+            const out$ = ctx.table.range(start || undefined, end || undefined);
+            return out$;
+        }));
     }
 }
 exports.TableGetStreamingRange = TableGetStreamingRange;

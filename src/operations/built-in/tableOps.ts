@@ -75,16 +75,19 @@ export class TableGetForUpdate<V>
 registerOperation(TableGetForUpdate)
 
 export class TableGetStreamingRange<V>
-    extends BasicOperation<[string | undefined, string | undefined], TableRecord<V>, { table: Table<V> }> {
+    extends BasicOperation<[string | null, string | null], TableRecord<V>, { table: Table<V> }> {
     protected name: string = "TableGetStreamingRange";
 
     _security(ctx: { table: Table<V> }): boolean {
         return true
     }
 
-    _operation(ctx: { table: Table<V> }, inObs: Observable<[string | undefined, string | undefined]>): Observable<TableRecord<V>> {
+    _operation(ctx: { table: Table<V> }, inObs: Observable<[string | null, string | null]>): Observable<TableRecord<V>> {
         return inObs.pipe(
-            mergeMap(([start, end]) => ctx.table.range(start, end))
+            mergeMap(([start, end]) => {
+                const out$ = ctx.table.range(start || undefined, end || undefined)
+                return out$
+            })
         )
     }
 }

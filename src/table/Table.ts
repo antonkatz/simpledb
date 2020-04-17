@@ -202,11 +202,21 @@ export class Table<V> {
         ).toPromise()
     }
 
-    range = (fromKey?: string, toKey?: string, limit= 1, reverse: boolean = false): Observable<TableRecord<V>> => {
+    range = (fromKey?: string, toKey?: string, limit = 1, reverse: boolean = false): Observable<TableRecord<V>> => {
         const subject = new Subject<TableRecord<V>>()
-        this.db.then(_ => _.createReadStream({
-            gt: fromKey, lt: toKey, limit, reverse
-        })).then(stream => {
+        const options = {
+            limit, reverse
+        }
+        if (fromKey) {
+            // @ts-ignore
+            options.gt = fromKey
+        }
+        if (toKey) {
+            // @ts-ignore
+            options.lt = toKey
+        }
+
+        this.db.then(_ => _.createReadStream(options)).then(stream => {
             stream.on('data', row => {
                 const key = StringCodec.rehydrate(row.key);
                 const value = this.codec.rehydrate(row.value);

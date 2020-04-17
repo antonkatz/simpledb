@@ -1106,7 +1106,7 @@
         "signature": "ed0612234337ee47529babfc8fa8ea5564dcf3d2dc905ecf97a6b42825514b69"
       },
       "../src/table/Table.ts": {
-        "version": "595bda442bc89ee4da9afaec0a26e33c3f44f69451ab099e3574f41aaa0c0623",
+        "version": "517917fa64bcf20bccfe79815620e88501e4bb165ebc456684e2b63a328fd2ed",
         "signature": "ffb70e3e70cb0b81ff6d3fe4f8a14e87d8e63a5dbbe09dbf0efd6caff351aa4a"
       },
       "../node_modules/@types/lodash/ts3.1/common/common.d.ts": {
@@ -1202,12 +1202,12 @@
         "signature": "8693a18bed172f6dc05b2df29d8e504dbf54985f84c6331bc666322ae9ec1e20"
       },
       "../src/execution/OperationStream.ts": {
-        "version": "305dca2d072a4f6458261d8b07fea7f48af82a7bec486dc401d0a54cb98cd8d3",
-        "signature": "6cbd202bfb05039cd190a0e1590fc9e6d64a84192404f551280da04d9bd93016"
+        "version": "9bd99b74c2bec4d1258a5aecadebe73493df3afd074ca5665b2ac58697fc254d",
+        "signature": "8b48550d606ffe156dbe6dca317b0f3b92133ce0d1fe9bd2f77bbb7330e84e93"
       },
       "../src/operations/BasicOperation.ts": {
-        "version": "d66e66cae68bfab0551d117d7bdaf7f1ae4525a8bb3ee99761ff0b48e4660e6c",
-        "signature": "c3ecb930eccb1eb6538fc1d8a325a99a5c01b43aa2ee4c09e4734ed6b9ea2464"
+        "version": "afbe079e8200f30af7bea45d72165d03f164d5f50067d152feeab05b255edb93",
+        "signature": "5716d9a8908494d88dce889e84659498f5eead54c0704176bc8d7b3b62d8fe5b"
       },
       "../src/operations/Operation.ts": {
         "version": "0aff704980c695be3bed29d58416eb86e2b7c3ac61294faec0977b915ae60b4b",
@@ -1222,8 +1222,8 @@
         "signature": "a91a641826798f0ada2c054f08052284c929749b0c4ddc1505c0e56d24774911"
       },
       "../src/operations/built-in/tableOps.ts": {
-        "version": "b0b89c4e8a735edf08b668677fd35ca9a5140210ac505653cc8d32f57c9ee79e",
-        "signature": "f3d1f076215e62e3f049240c5a75a8c22d6c351a9e2d4e5a4e56bd1fbf4e6389"
+        "version": "6ae0765abf5f0772dbc15abd6cdd94b26743a3e03c72c1e341082d8744e014b3",
+        "signature": "a1ed36245296c6f50d10e83c003e124936a6f07b25b181384c71e86bcddaf1ba"
       },
       "../src/operations/built-in/idOps.ts": {
         "version": "c0bfb57418c8a9b62696d42f514623eb86b02a1fedae2a926a3bb93be8e08663",
@@ -4057,6 +4057,7 @@
         "../node_modules/immutable/dist/immutable-nonambient.d.ts",
         "../src/execution/OperationStream.ts",
         "../src/operations/Operation.ts",
+        "../node_modules/rxjs/operators/index.d.ts",
         "../node_modules/@types/node/fs.d.ts",
         "../node_modules/@types/node/ts3.2/fs.d.ts",
         "../node_modules/@types/node/util.d.ts",

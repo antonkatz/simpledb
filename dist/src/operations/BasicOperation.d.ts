@@ -17,5 +17,7 @@ export declare abstract class BasicOperation<In, Out, Context> implements Operat
         opName: string;
         ctx: any;
     };
+    protected debugOn: boolean;
+    debug(): this;
 }
 //# sourceMappingURL=BasicOperation.d.ts.map

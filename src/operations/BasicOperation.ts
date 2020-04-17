@@ -1,8 +1,9 @@
 import {Observable}                                                from "rxjs";
 import {BasicOperationStream, Operation, OperationStream, OrEmpty} from "..";
 import {List}                                                      from "immutable";
-import {OperationStreamSymbol}                      from "../execution/OperationStream";
-import {OmitIntoVoid, OperationSymbol, VoidIfEmpty} from "./Operation";
+import {OperationStreamSymbol}                                     from "../execution/OperationStream";
+import {OmitIntoVoid, OperationSymbol, VoidIfEmpty}                from "./Operation";
+import {tap}                                                       from "rxjs/operators";
 
 export abstract class BasicOperation<In, Out, Context> implements Operation<In, Out, Context> {
     readonly symbol = OperationSymbol;
@@ -20,28 +21,20 @@ export abstract class BasicOperation<In, Out, Context> implements Operation<In, 
 
     withContext<PCtx extends Partial<Context>, NextCtx extends OmitIntoVoid<Context, keyof PCtx>>(andContext: PCtx):
         BasicOperation<In, Out, NextCtx> {
-        const _s = this;
-        const oldContext = this.context
+        this.context = {...this.context, ...andContext}
 
-        return new class extends BasicOperation<In, Out, NextCtx> {
-            name = _s.getOpName();
-            context = {...oldContext, ...andContext}
-
-            _security(ctx: NextCtx): boolean {
-                // @ts-ignore
-                return _s._security(ctx);
-            }
-
-            _operation(ctx: NextCtx, inObs: Observable<In>): Observable<Out> {
-                // @ts-ignore
-                return _s._operation(ctx, inObs);
-            }
-        }
+        // @ts-ignore
+        return this
     }
 
     operation(ctx: Context, inObs: Observable<In>): Observable<Out> {
         const fullCtx = {...this.context, ...ctx} as unknown as Context;
-        return this._operation(fullCtx, inObs)
+        let obs = this._operation(fullCtx, inObs)
+        if (this.debugOn) obs = obs.pipe(tap(v => {
+            console.log(this.getOpName())
+            console.log(JSON.stringify(v, null, 2))
+        }))
+        return obs
     }
 
     security(ctx: Context): boolean {
@@ -70,5 +63,11 @@ export abstract class BasicOperation<In, Out, Context> implements Operation<In, 
 
     toJSON() {
         return {opName: this.getOpName(), ctx: this.context}
+    }
+
+    protected debugOn = false
+    debug() {
+        this.debugOn = true
+        return this
     }
 }

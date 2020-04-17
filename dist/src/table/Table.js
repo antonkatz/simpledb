@@ -95,9 +95,18 @@ class Table {
         };
         this.range = (fromKey, toKey, limit = 1, reverse = false) => {
             const subject = new rxjs_1.Subject();
-            this.db.then(_ => _.createReadStream({
-                gt: fromKey, lt: toKey, limit, reverse
-            })).then(stream => {
+            const options = {
+                limit, reverse
+            };
+            if (fromKey) {
+                // @ts-ignore
+                options.gt = fromKey;
+            }
+            if (toKey) {
+                // @ts-ignore
+                options.lt = toKey;
+            }
+            this.db.then(_ => _.createReadStream(options)).then(stream => {
                 stream.on('data', row => {
                     const key = Codec_1.StringCodec.rehydrate(row.key);
                     const value = this.codec.rehydrate(row.value);

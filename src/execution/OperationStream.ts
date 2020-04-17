@@ -1,6 +1,6 @@
-import {List}                            from "immutable"
-import {Operation, OrEmpty, VoidIfEmpty} from "../operations/Operation"
-import {runOp}                           from "./runOp"
+import {List}                                          from "immutable"
+import {OmitIntoVoid, Operation, OrEmpty, VoidIfEmpty} from "../operations/Operation"
+import {runOp}                                         from "./runOp"
 import {Observable, Subject} from "rxjs"
 import {SecurityError}       from "../security/Security"
 
@@ -16,7 +16,7 @@ export interface OperationStream<In, Out, Context> {
 
     getContext(): any
     setContext(ctx: Context): OperationStream<In, Out, void>
-    withContext<PCtx extends Partial<Context>>(ctx: PCtx): OperationStream<In, Out, Omit<Context, keyof PCtx>>
+    withContext<PCtx extends Partial<Context>>(ctx: PCtx): OperationStream<In, Out, OmitIntoVoid<Context, keyof PCtx>>
 
     run(input: Observable<In>, ctx: Context): Observable<Out>
 
@@ -47,7 +47,7 @@ export class BasicOperationStream<In, Out, Context> implements OperationStream<I
         return new BasicOperationStream(this.chain, {...this.innerContext, ...ctx})
     }
 
-    withContext<PCtx extends Partial<Context>>(ctx: PCtx): OperationStream<In, Out, Omit<Context, keyof PCtx>> {
+    withContext<PCtx extends Partial<Context>>(ctx: PCtx): OperationStream<In, Out, OmitIntoVoid<Context, keyof PCtx>> {
         return new BasicOperationStream(this.chain, {...this.innerContext, ...ctx})
     }
 
