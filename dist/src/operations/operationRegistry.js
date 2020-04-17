@@ -6,10 +6,8 @@ function getRegisteredOperation(opName) {
     return operationRegistry.get(opName);
 }
 exports.getRegisteredOperation = getRegisteredOperation;
-// export function registerOperation(builder: () => OperationInstance<any, any, any>) {
 // fixme. use constructor name
 function registerOperation(op) {
-    console.log('registering', op.name);
     operationRegistry = operationRegistry.set(op.name, op);
     return new op();
 }

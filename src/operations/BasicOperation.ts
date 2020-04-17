@@ -1,6 +1,6 @@
-import {Observable}                                                from "rxjs";
-import {BasicOperationStream, Operation, OperationStream, OrEmpty} from "..";
-import {List}                                                      from "immutable";
+import {Observable}                                                                   from "rxjs";
+import {BasicOperationStream, Operation, OperationStream, OrEmpty, registerOperation} from "..";
+import {List}                                                                         from "immutable";
 import {OperationStreamSymbol}                                     from "../execution/OperationStream";
 import {OmitIntoVoid, OperationSymbol, VoidIfEmpty}                from "./Operation";
 import {tap}                                                       from "rxjs/operators";
