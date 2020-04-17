@@ -1,8 +1,8 @@
 import {Observable}                                                from "rxjs";
 import {BasicOperationStream, Operation, OperationStream, OrEmpty} from "..";
 import {List}                                                      from "immutable";
-import {OperationStreamSymbol}        from "../execution/OperationStream";
-import {OperationSymbol, VoidIfEmpty} from "./Operation";
+import {OperationStreamSymbol}                      from "../execution/OperationStream";
+import {OmitIntoVoid, OperationSymbol, VoidIfEmpty} from "./Operation";
 
 export abstract class BasicOperation<In, Out, Context> implements Operation<In, Out, Context> {
     readonly symbol = OperationSymbol;
@@ -18,7 +18,7 @@ export abstract class BasicOperation<In, Out, Context> implements Operation<In, 
         return this.name
     }
 
-    withContext<PCtx extends Partial<Context>, NextCtx extends Omit<Context, keyof PCtx>>(andContext: PCtx):
+    withContext<PCtx extends Partial<Context>, NextCtx extends OmitIntoVoid<Context, keyof PCtx>>(andContext: PCtx):
         BasicOperation<In, Out, NextCtx> {
         const _s = this;
         const oldContext = this.context

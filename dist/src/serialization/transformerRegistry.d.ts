@@ -1,5 +1,5 @@
-import { objToOp } from "./operationTransformer";
 import { objToTable } from "./tableTransformer";
-declare const transformerRegistry: (typeof objToTable | typeof objToOp)[];
-export default transformerRegistry;
+import { objToOp } from "./operationTransformer";
+import { objToStream } from "./operationStreamTransformer";
+export declare const transformerRegistry: (typeof objToTable | typeof objToOp | typeof objToStream)[];
 //# sourceMappingURL=transformerRegistry.d.ts.map

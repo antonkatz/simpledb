@@ -76,7 +76,7 @@ registerOperation(TableGetForUpdate)
 
 export class TableGetStreamingRange<V>
     extends BasicOperation<[string | undefined, string | undefined], TableRecord<V>, { table: Table<V> }> {
-    protected name: string = "TableGetForUpdate";
+    protected name: string = "TableGetStreamingRange";
 
     _security(ctx: { table: Table<V> }): boolean {
         return true

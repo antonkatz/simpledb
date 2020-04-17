@@ -47,8 +47,10 @@ async function startStreamingServer(key, cert, eventListeners) {
 exports.default = startStreamingServer;
 async function onStreamRequest(socket, dehydratedStream) {
     // console.debug(`Server got dehydrated: ${dehydratedStream}`)
-    const opId = await IdDigest_1.ID_DIGEST(dehydratedStream);
     const opStream = serialization_1.rehydrateOpStreamFromJson(dehydratedStream);
+    if (!opStream)
+        throw new TypeError('Operation stream failed to rehydrate');
+    const opId = await IdDigest_1.ID_DIGEST(dehydratedStream);
     const connCtx = createConnectionContext(opId, socket.id);
     const obs = opStream.run(rxjs_1.NEVER, connCtx).pipe(operators_1.tap(v => {
         // console.debug(`Server tapped: ${JSON.stringify(v)}`)

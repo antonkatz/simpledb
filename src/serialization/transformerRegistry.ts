@@ -1,9 +1,9 @@
-import {objToOp} from "./operationTransformer"
-import {objToTable} from "./tableTransformer"
+import {objToTable}  from "./tableTransformer";
+import {objToOp}     from "./operationTransformer";
+import {objToStream} from "./operationStreamTransformer";
 
-const transformerRegistry = [
+export const transformerRegistry = [
     objToTable,
     objToOp,
+    objToStream
 ]
-
-export default transformerRegistry

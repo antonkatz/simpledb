@@ -9,7 +9,7 @@ class Once extends BasicOperation_1.BasicOperation {
         this.name = "Once";
     }
     _operation(ctx, inObs) {
-        return inObs.pipe(operators_1.first());
+        return inObs.pipe(operators_1.first(null, undefined));
     }
     _security(ctx) {
         return true;

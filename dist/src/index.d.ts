@@ -1,5 +1,6 @@
 export { default as DbBasePath } from "./database/DbBasePath";
 export type { TableRecord } from './table/Table';
+export { Table } from './table/Table';
 export * from './table/TableStreamEntry';
 export { buildTable, TableBuilder } from './table/buildTable';
 export type { OrEmpty, Operation } from './operations/Operation';
@@ -14,7 +15,6 @@ export * from "./operations/built-in/filterOps";
 export * from "./operations/built-in/mapOps";
 export * from "./operations/built-in/tableRecordOps";
 export { buildOpStream, BasicOperationStream, OperationStream } from './execution/OperationStream';
-export { rehydrateOpStream } from "./serialization/index";
 export { fetchSimpleDb } from './network/http/http-client';
 export type { ExactOrVoid } from './network/socket/socket-client';
 export { default as startStreamingServer } from './network/socket/socket-api';

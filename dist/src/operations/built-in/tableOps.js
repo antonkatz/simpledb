@@ -57,7 +57,7 @@ operationRegistry_1.registerOperation(TableGetForUpdate);
 class TableGetStreamingRange extends BasicOperation_1.BasicOperation {
     constructor() {
         super(...arguments);
-        this.name = "TableGetForUpdate";
+        this.name = "TableGetStreamingRange";
     }
     _security(ctx) {
         return true;

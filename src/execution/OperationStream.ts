@@ -6,7 +6,7 @@ import {SecurityError}       from "../security/Security"
 
 export const OperationStreamSymbol = Symbol()
 
-export type SerializedOperationStream = {ctx?: any, chain: any[]}
+export type SerializedOperationStream = {ctx?: any, chain: any[], __type: string}
 
 export interface OperationStream<In, Out, Context> {
     readonly symbol: Symbol
@@ -95,7 +95,7 @@ export class BasicOperationStream<In, Out, Context> implements OperationStream<I
     }
 
     serialize() {
-        const obj: SerializedOperationStream = {ctx: this.innerContext, chain: this.chain.toJSON()}
+        const obj: SerializedOperationStream = {ctx: this.innerContext, chain: this.chain.toJSON(), __type: 'basicOperationStream'}
         return JSON.stringify(obj)
     }
 }

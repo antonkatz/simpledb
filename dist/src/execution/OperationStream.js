@@ -55,7 +55,7 @@ class BasicOperationStream {
         return new BasicOperationStream(this.chain.concat(otherStream.chain), fullCtx);
     }
     serialize() {
-        const obj = { ctx: this.innerContext, chain: this.chain.toJSON() };
+        const obj = { ctx: this.innerContext, chain: this.chain.toJSON(), __type: 'basicOperationStream' };
         return JSON.stringify(obj);
     }
 }

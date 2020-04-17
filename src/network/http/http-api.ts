@@ -1,7 +1,7 @@
-import {NEVER} from "rxjs"
-import {first}         from "rxjs/operators"
-import {SecurityError} from "../../security/Security";
-import {rehydrateOpStream} from "../../serialization";
+import {NEVER}             from "rxjs"
+import {first}             from "rxjs/operators"
+import {SecurityError}     from "../../security/Security";
+import {rehydrate}         from "../../serialization/rehydrate";
 
 // @ts-ignore
 export default async function HttpEndpoint (req, res) {
@@ -11,7 +11,7 @@ export default async function HttpEndpoint (req, res) {
     if (streamRequest) {
         try {
 
-            const opStream = rehydrateOpStream(streamRequest);
+            const opStream = rehydrate(streamRequest);
 
             const streamRes = await opStream.run(NEVER, {}).pipe(
                 first(),

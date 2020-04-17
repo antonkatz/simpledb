@@ -6,6 +6,7 @@ export const OperationSymbol = Symbol();
 
 export type OrEmpty<T> = T extends never ? {} : T
 export type VoidIfEmpty<T> = {} extends T ? void : T
+export type OmitIntoVoid<T, K extends keyof any> = Exclude<keyof T, K> extends never ? void : Pick<T, Exclude<keyof T, K>>;
 
 export interface Operation<In, Out, Context> {
     readonly symbol: Symbol
@@ -14,7 +15,7 @@ export interface Operation<In, Out, Context> {
 
     getOpName(): string
     withContext<PCtx extends Partial<Context>>(andContext: PCtx):
-        BasicOperation<In, Out, Omit<Context, keyof PCtx>>
+        Operation<In, Out, OmitIntoVoid<Context, keyof PCtx>>
 
     chain<NextOut, NextCtx>(op: Operation<Out, NextOut, NextCtx>):
         OperationStream<In, NextOut, VoidIfEmpty<OrEmpty<NextCtx> & OrEmpty<Context>>>
@@ -23,7 +24,3 @@ export interface Operation<In, Out, Context> {
 
     toJSON(): {opName: string, ctx: any}
 }
-
-type what = Omit<{a: 2}, 'a'>
-type whatifwoid = {a: 2} & void
-type whatifnever = {a: 2} & never

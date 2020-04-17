@@ -5,6 +5,8 @@ function __export(m) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var DbBasePath_1 = require("./database/DbBasePath");
 exports.DbBasePath = DbBasePath_1.default;
+var Table_1 = require("./table/Table");
+exports.Table = Table_1.Table;
 __export(require("./table/TableStreamEntry"));
 var buildTable_1 = require("./table/buildTable");
 exports.buildTable = buildTable_1.buildTable;
@@ -24,8 +26,7 @@ __export(require("./operations/built-in/tableRecordOps"));
 var OperationStream_1 = require("./execution/OperationStream");
 exports.buildOpStream = OperationStream_1.buildOpStream;
 exports.BasicOperationStream = OperationStream_1.BasicOperationStream;
-var index_1 = require("./serialization/index");
-exports.rehydrateOpStream = index_1.rehydrateOpStream;
+// export {rehydrateOpStreamF}                                    from "./serialization/index"
 var http_client_1 = require("./network/http/http-client");
 exports.fetchSimpleDb = http_client_1.fetchSimpleDb;
 var socket_api_1 = require("./network/socket/socket-api");

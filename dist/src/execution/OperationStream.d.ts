@@ -5,6 +5,7 @@ export declare const OperationStreamSymbol: unique symbol;
 export declare type SerializedOperationStream = {
     ctx?: any;
     chain: any[];
+    __type: string;
 };
 export interface OperationStream<In, Out, Context> {
     readonly symbol: Symbol;
