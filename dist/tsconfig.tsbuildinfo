@@ -1270,12 +1270,12 @@
         "signature": "7255e9138b74f3fe8a9910bf3e711d43be1399ab8a0554bad34dc766511059be"
       },
       "../src/network/socket/socket-client.ts": {
-        "version": "df9a9c0e59bfdb2d8b8c6614681c7abd6835435f1af5c31434e82683215a5a6b",
+        "version": "df93e8affdb78c80493473c6a0244b907f4a150ece0a0292b2b89ff96c7e482e",
         "signature": "cad099ea94f9bdcf852a99db2d65b2ae21f383a45a22623fce5ffd693abdf43c"
       },
       "../src/serialization/tableTransformer.ts": {
         "version": "06a14003caa965fa915082dbf436fd932795e233854d3a9fa1e2029729bf8819",
-        "signature": "c056b0f5445c3d3886abe8f487f900fc4cab2b5b706a4a6b561e5bbfa3156843"
+        "signature": "2c1928e2c8198a007856ee5a64293eac096b9c45b5423f7ce606b123829e0bb3"
       },
       "../src/serialization/operationTransformer.ts": {
         "version": "8fd6d6de382af9c036418838edf33fd0313b83e11dedf4c579e876234a1782b3",
@@ -1361,17 +1361,21 @@
         "version": "26ae01272ba6b43c25de8032178c24e18dc389b71a0e9d4d41ec8c08cec2a91d",
         "signature": "60a54202df0cb5c841f7e7ced520e603911275b6267f04fad4b1c047c32af84b"
       },
-      "../__tests__/patch.spec.ts": {
-        "version": "a214c030281f28f9a94f84218cdde81132f9d82588586aa5d8b581816de03bc9",
-        "signature": "f80c3726270c8debe6f5f9e4eb9711d440311b12c8400befa5de80f5e93f4df5"
-      },
-      "../__tests__/serialize.spec.ts": {
-        "version": "064f991eb95a17f90ce077fab3ccf19785a679bebe70a3bc92edf7a012a8b5fe",
-        "signature": "1f0e58ed7f3b6373a0e7fa567d3cf7591f0f852fce4ca1238c42e3b04eb98e54"
-      },
       "../src/network/http/http-api.ts": {
         "version": "5ac3aef66b47f4b08bc611b2b9e5b8d81e5b0f3f141f15288393e3190a520af6",
         "signature": "51b5e1139b7447ae820a21c038a2eb40adf16441be7a3f76ee54ac45fa4ceac4"
+      },
+      "../src/operations/functional/interface-v2.ts": {
+        "version": "f3bbdfa9da64838bd9f355a31ef5bf4e382b708146fd6c01659f51422b371efd",
+        "signature": "9af066635ab830cb79138b3f9146fa0a3b5a8cee965965c6bc15b9c43d976051"
+      },
+      "../src/operations/functional/interface.ts": {
+        "version": "6dd5928328c22e98e37c3682348c02d5c89cbadf24b963cbddd3a3a770e1ae48",
+        "signature": "2dad1d351f39ab6eda911dcdaf6e3256c8787868cfe73e0190e278cfd70b566b"
+      },
+      "../src/operations/functional/test-impl.ts": {
+        "version": "5f1313d0ed1184f857c5e14c2e694c9774e03b57db3fae162475b76f3eed7c00",
+        "signature": "150b49b511db1a2742b6ff3f3e3cbe694bd365a7cc81199d9cd50e72ed372795"
       },
       "../node_modules/@babel/types/lib/index.d.ts": {
         "version": "9566baf39af3e8e8525367b91f8313d0f3dee7dd21aa76bb9ecbc5c3c66df739",
@@ -4438,35 +4442,33 @@
         "../node_modules/@types/node/util.d.ts",
         "../node_modules/@types/node/ts3.2/util.d.ts"
       ],
-      "../__tests__/patch.spec.ts": [
-        "../src/index.ts",
-        "../node_modules/@types/lodash/ts3.1/fp.d.ts",
-        "../node_modules/immer/dist/immer.d.ts",
-        "../node_modules/rxjs/index.d.ts",
-        "../node_modules/rxjs/operators/index.d.ts",
-        "../node_modules/@types/node/fs.d.ts",
-        "../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../node_modules/@types/node/util.d.ts",
-        "../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
-      "../__tests__/serialize.spec.ts": [
-        "../src/index.ts",
-        "../src/serialization/index.ts",
-        "../src/operations/built-in/rxjsOps/RxjsPipable.ts",
-        "../node_modules/rxjs/operators/index.d.ts",
-        "../src/serialization/rehydrate.ts",
-        "../src/execution/runOp.ts",
-        "../node_modules/rxjs/index.d.ts",
-        "../node_modules/@types/node/fs.d.ts",
-        "../node_modules/@types/node/ts3.2/fs.d.ts",
-        "../node_modules/@types/node/util.d.ts",
-        "../node_modules/@types/node/ts3.2/util.d.ts"
-      ],
       "../src/network/http/http-api.ts": [
         "../node_modules/rxjs/index.d.ts",
         "../node_modules/rxjs/operators/index.d.ts",
         "../src/security/Security.ts",
         "../src/serialization/rehydrate.ts",
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../src/operations/functional/interface-v2.ts": [
+        "../node_modules/rxjs/index.d.ts",
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../src/operations/functional/interface.ts": [
+        "../node_modules/rxjs/index.d.ts",
+        "../node_modules/@types/node/fs.d.ts",
+        "../node_modules/@types/node/ts3.2/fs.d.ts",
+        "../node_modules/@types/node/util.d.ts",
+        "../node_modules/@types/node/ts3.2/util.d.ts"
+      ],
+      "../src/operations/functional/test-impl.ts": [
+        "../src/operations/functional/interface-v2.ts",
+        "../node_modules/rxjs/index.d.ts",
         "../node_modules/@types/node/fs.d.ts",
         "../node_modules/@types/node/ts3.2/fs.d.ts",
         "../node_modules/@types/node/util.d.ts",
@@ -7208,7 +7210,7 @@
         "../node_modules/rxjs/index.d.ts"
       ],
       "../src/serialization/tableTransformer.ts": [
-        "../src/table/Table.ts"
+        "../src/index.ts"
       ],
       "../src/serialization/operationTransformer.ts": [
         "../src/operations/Operation.ts"
@@ -7347,6 +7349,12 @@
         "../src/network/socket/ConnectionContext.ts",
         "../src/security/Security.ts",
         "../src/utils/index.ts"
+      ],
+      "../src/operations/functional/interface-v2.ts": [
+        "../node_modules/rxjs/index.d.ts"
+      ],
+      "../src/operations/functional/interface.ts": [
+        "../node_modules/rxjs/index.d.ts"
       ],
       "../node_modules/@babel/types/lib/index.d.ts": [
         "../node_modules/@types/node/fs.d.ts",
@@ -7804,19 +7812,39 @@
       "../node_modules/@types/lodash/ts3.1/common/util.d.ts",
       "../node_modules/@types/lodash/ts3.1/index.d.ts",
       "../node_modules/@types/lodash/ts3.1/fp.d.ts",
+      "../src/utils/debugUtils.ts",
+      "../src/utils/index.ts",
       "../node_modules/@types/leveldown/index.d.ts",
+      "../src/database/adapter.ts",
       "../node_modules/immutable/dist/immutable-nonambient.d.ts",
       "../src/table/tableRegistry.ts",
       "../src/table/buildTable.ts",
       "../src/security/Security.ts",
       "../src/execution/runOp.ts",
       "../src/execution/OperationStream.ts",
+      "../src/operations/BasicOperation.ts",
+      "../src/operations/Operation.ts",
+      "../src/operations/operationRegistry.ts",
+      "../src/operations/built-in/headOps.ts",
+      "../src/operations/built-in/tableOps.ts",
+      "../src/operations/built-in/idOps.ts",
+      "../src/operations/built-in/abstractOps.ts",
+      "../src/operations/built-in/endOps.ts",
+      "../src/operations/built-in/filterOps.ts",
+      "../src/operations/built-in/mapOps.ts",
+      "../src/operations/built-in/tableRecordOps.ts",
       "../src/network/http/http-client.ts",
       "../src/network/socket/base64.ts",
+      "../src/network/IdDigest.ts",
       "../src/network/socket/ConnectionContext.ts",
       "../node_modules/@types/socket.io-client/index.d.ts",
-      "../src/network/socket/socket-client.ts",
       "../src/serialization/tableTransformer.ts",
+      "../src/serialization/operationTransformer.ts",
+      "../src/serialization/operationStreamTransformer.ts",
+      "../src/operations/built-in/rxjsOps/RxjsPipable.ts",
+      "../src/serialization/rxjsContextTransformer.ts",
+      "../src/serialization/transformerRegistry.ts",
+      "../src/serialization/rehydrate.ts",
       "../src/serialization/index.ts",
       "../src/network/socket/tracking.ts",
       "../node_modules/@types/socket.io/index.d.ts",
@@ -7831,7 +7859,11 @@
       "../node_modules/@types/qs/index.d.ts",
       "../node_modules/@types/express/index.d.ts",
       "../src/network/socket/socket-api.ts",
+      "../src/index.ts",
       "../src/network/http/http-api.ts",
+      "../src/operations/functional/interface-v2.ts",
+      "../src/operations/functional/interface.ts",
+      "../src/operations/functional/test-impl.ts",
       "../node_modules/@babel/types/lib/index.d.ts",
       "../node_modules/@types/babel__generator/index.d.ts",
       "../node_modules/@types/babel__traverse/index.d.ts",
@@ -7855,30 +7887,7 @@
       "../node_modules/@types/stack-utils/index.d.ts",
       "../node_modules/@types/yargs-parser/index.d.ts",
       "../node_modules/@types/yargs/index.d.ts",
-      "../src/operations/operationRegistry.ts",
-      "../src/index.ts",
-      "../src/serialization/rxjsContextTransformer.ts",
-      "../src/operations/built-in/rxjsOps/RxjsPipable.ts",
-      "../src/serialization/operationStreamTransformer.ts",
-      "../src/serialization/operationTransformer.ts",
-      "../src/operations/built-in/filterOps.ts",
-      "../src/operations/built-in/endOps.ts",
-      "../src/operations/built-in/idOps.ts",
-      "../src/operations/built-in/tableOps.ts",
-      "../src/operations/built-in/headOps.ts",
-      "../src/utils/debugUtils.ts",
-      "../src/utils/index.ts",
-      "../src/database/adapter.ts",
-      "../src/operations/BasicOperation.ts",
-      "../src/operations/Operation.ts",
-      "../src/operations/built-in/abstractOps.ts",
-      "../src/operations/built-in/mapOps.ts",
-      "../src/operations/built-in/tableRecordOps.ts",
-      "../src/network/IdDigest.ts",
-      "../src/serialization/transformerRegistry.ts",
-      "../src/serialization/rehydrate.ts",
-      "../__tests__/patch.spec.ts",
-      "../__tests__/serialize.spec.ts"
+      "../src/network/socket/socket-client.ts"
     ]
   },
   "version": "3.8.3"

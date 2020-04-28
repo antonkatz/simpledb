@@ -35,6 +35,12 @@ export default class NetworkStream {
         if (!this.socketio) throw new Error('Failed to load socketio client lib');
 
         const s = this.socketio(url, {transports: ['websocket'], path: this.path})
+
+        s.on('disconnect', (reason: any) => {
+            console.warn('Has disconnected because: ', reason)
+            location.reload()
+        })
+
         this.socket.next(s)
     }
 
