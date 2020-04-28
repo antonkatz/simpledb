@@ -1270,8 +1270,8 @@
         "signature": "7255e9138b74f3fe8a9910bf3e711d43be1399ab8a0554bad34dc766511059be"
       },
       "../src/network/socket/socket-client.ts": {
-        "version": "df93e8affdb78c80493473c6a0244b907f4a150ece0a0292b2b89ff96c7e482e",
-        "signature": "cad099ea94f9bdcf852a99db2d65b2ae21f383a45a22623fce5ffd693abdf43c"
+        "version": "85652d3b8b7f63391a5129cb9dc0c23cc776bad23bfe51e6627f508fe82ebbc5",
+        "signature": "451f0a8b9cbd61c02569b56006bae88cb4bf6512d587bc6c99e4b9b58e9f6693"
       },
       "../src/serialization/tableTransformer.ts": {
         "version": "06a14003caa965fa915082dbf436fd932795e233854d3a9fa1e2029729bf8819",

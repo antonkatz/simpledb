@@ -18,6 +18,7 @@ class NetworkStream {
         this.path = path;
         this.socket = new rxjs_1.BehaviorSubject(null);
         this.socketio = null;
+        this.isUnloading = false;
     }
     async connect() {
         console.debug('NetworkStream is connecting...');
@@ -26,7 +27,8 @@ class NetworkStream {
         const _t = this;
         window.addEventListener('beforeunload', function () {
             console.debug('Closing socket in `beforeunload`');
-            _t.socket.toPromise().then(_ => _ && _.close());
+            _t.isUnloading = true;
+            _t.socket.toPromise().then(_ => _ && _.close()).then(_ => _t.isUnloading = false);
         });
     }
     openSocket() {
@@ -36,9 +38,11 @@ class NetworkStream {
         if (!this.socketio)
             throw new Error('Failed to load socketio client lib');
         const s = this.socketio(url, { transports: ['websocket'], path: this.path });
+        const _t = this;
         s.on('disconnect', (reason) => {
             console.warn('Has disconnected because: ', reason);
-            location.reload();
+            if (!_t.isUnloading)
+                location.reload();
         });
         this.socket.next(s);
     }

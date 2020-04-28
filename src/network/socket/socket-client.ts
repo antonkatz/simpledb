@@ -10,6 +10,7 @@ export default class NetworkStream {
     private socket: BehaviorSubject<SocketIOClient.Socket | null> =
         new BehaviorSubject<SocketIOClient.Socket | null>(null);
     private socketio: SocketIOClientStatic | null = null;
+    private isUnloading = false
 
     constructor(readonly host: string, readonly protocol: string, readonly port?: any, readonly path?: string) {
     }
@@ -23,7 +24,8 @@ export default class NetworkStream {
             const _t = this;
             window.addEventListener('beforeunload', function () {
                 console.debug('Closing socket in `beforeunload`');
-                _t.socket.toPromise().then(_ => _ && _.close());
+                _t.isUnloading = true
+                _t.socket.toPromise().then(_ => _ && _.close()).then(_ => _t.isUnloading = false);
             });
     }
 
@@ -36,9 +38,11 @@ export default class NetworkStream {
 
         const s = this.socketio(url, {transports: ['websocket'], path: this.path})
 
+        const _t = this
         s.on('disconnect', (reason: any) => {
             console.warn('Has disconnected because: ', reason)
-            location.reload()
+
+            if (!_t.isUnloading) location.reload()
         })
 
         this.socket.next(s)

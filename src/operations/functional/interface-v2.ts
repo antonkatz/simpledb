@@ -1,51 +1,80 @@
-import {Observable} from "rxjs";
+import {Observable}       from "rxjs";
 
-export type OmitOrVoid<T, K> = Exclude<keyof T, keyof K> extends never ? void : Pick<T, Exclude<keyof T, keyof K>>;
+export interface OperatorFactory<In, Out, FOut, NeededArgs extends any[], GivenArgs extends any> {
+    (
+        func: (...args: (NeededArgs & GivenArgs)) => FOut,
+        security: (...args: (NeededArgs & GivenArgs)) => Error | undefined,
+        // args: (in$: In) => Observable<NeededArgs> | NeededArgs
+        args: (in$: In) => NeededArgs, // keep it simple for now
+    ): Operator<In, Out, any>
+}
 
-type OperatorTypes = "pipe" | "observable"
+export interface PipeOperatorFactory<
+    PrevOut, NextOut, PrevContext, NextContext,
+    In extends [PrevOut, PrevContext],
+    Out extends [NextOut, NextContext],
+    PipeArgs extends any[], SetArgs extends any[],
 
-export interface Operator<In, Out, UnfulfilledContext, SerializedContext>
+    > extends OperatorFactory<In, Out, any, any, any>{
+
+    (
+        func: (...argsPreset: SetArgs) => (...argsInPipe: PipeArgs) => Out,
+        // func: (...argsPreset: (SetArgs & ContextArgs)) => Out,
+        security: (...args: (PipeArgs & SetArgs)) => Error | undefined,
+        // args: (in$: In) => Observable<NeededArgs> | NeededArgs
+        args?: (in$: In) => PipeArgs, // keep it simple for now
+        contextModifier?: (in$: In, out: NextOut) => NextContext
+    ): (...args:SetArgs) => Operator<In, Out, any>
+}
+
+export interface SimpleOperatorFactory<
+    In, Out,
+    ContextArgs extends any[], SetArgs extends any[],
+
+    > extends OperatorFactory<In, Out, any, any, any>{
+
+    (
+        func: (argsPreset: SetArgs, ...argsFromContext: ContextArgs) => Out,
+        // func: (...argsPreset: (SetArgs & ContextArgs)) => Out,
+        security: (...args: (ContextArgs & SetArgs)) => Error | undefined,
+        // args: (in$: In) => Observable<NeededArgs> | NeededArgs
+        args?: (in$: In) => ContextArgs, // keep it simple for now
+    ): (...args:SetArgs) => Operator<In, Out, any>
+}
+
+export interface ObservableOperatorFactory<
+    In, Out, SetArgs extends any[]
+    > extends OperatorFactory<In, Out, any, any, any>{
+
+    (
+        func: (...args: SetArgs) => (in$: Observable<In>) => Observable<Out>,
+        security: (...args: SetArgs) => Error | undefined,
+    ): (...args:SetArgs) => Operator<Observable<In>, Observable<Out>, any>
+}
+
+export interface Operator<In, Out, Args extends any[]>
     extends ObservableConstructor<In, Out>,
-        SerializableOperator<Operator<In, Out, UnfulfilledContext, SerializedContext>, SerializedContext> {
+        SerializableOperator<Operator<In, Out, Args>, Args>
+{
+    // contextTag: string | undefined // used to tag the result into the context
+    // so the pipe starts to look like this [last, {ctx}]
 
-    readonly __type: OperatorTypes;
+    readonly givenArgs: Args
+    readonly prevOp: Operator<any, In | Observable<In>, any> | undefined
+    readonly nextOp: Operator<Out | Observable<Out>, any, any> | undefined
 
     (in$: In): Out
 
-    addContext<P extends UnfulfilledContext>(ctx: P): Operator<In, Out, OmitOrVoid<UnfulfilledContext, P>, SerializedContext>
-
-    next<Next, AUCtx>(op: Operator<Out, Next, AUCtx, any>): MultiOperator<In, Next, UnfulfilledContext & AUCtx>
+    next<Next>(op: Operator<Out | Observable<Out>, Next, any>): Operator<In, Next, any>
 }
 
-/*
-* A stream is just an operator with context that has a list of operators
-* */
-export interface MultiOperator<In, Out, UCtx> extends ObservableOperator<In, Out, UCtx, {chain: any[], additive?: any}> {
-    readonly __type: "observable"
-}
+export interface PipeOperator<In, Out, Args extends any[]> extends Operator<In, Out, Args> {}
 
-export interface ObservableOperator<In, Out, UnfulfilledContext, SerializedContext>
-    extends Operator<Observable<In>, Observable<Out>, UnfulfilledContext, SerializedContext>{
-    readonly __type: "observable"
-}
+export interface ObservableOperator<In, Out> extends Operator<Observable<In>, Observable<Out>, any>{}
 
-export interface PipeOperator<In, Out, UnfulfilledContext, SerializedContext>
-    extends Operator<In, Out, UnfulfilledContext, SerializedContext>{
-    readonly __type: "pipe"
-}
-
-export interface UnfulfilledContext<All, Left> {
-    toJSON(): any
-    fromJSON(raw: JSON): All
-
-    get: All
-    add<P extends Partial<Left>>(ctx: P): UnfulfilledContext<All, OmitOrVoid<Left, P>>
-}
-
-export interface SerializableOperator<T, C> {
-    toJSON(): {ctx: C, operatorId: string}
-
-    fromJSON(raw: any): T
+export interface SerializableOperator<Op, Args extends any[]> {
+    toJSON(): {operatorId: string, operatorNamespace: 'tasty-scone' | 'rxjs', args: Args}
+    fromJSON(raw: any): Op
 }
 
 export interface ObservableConstructor<In, Out> {

@@ -9,6 +9,7 @@ export default class NetworkStream {
     readonly path?: string | undefined;
     private socket;
     private socketio;
+    private isUnloading;
     constructor(host: string, protocol: string, port?: any, path?: string | undefined);
     connect(): Promise<void>;
     private openSocket;
